@@ -71,3 +71,17 @@ class CancelAppointmentView(APIView):
 
         # cancellation confirmation message
         return Response({"message": "Appointment cancelled"}, status=status.HTTP_200_OK)
+
+
+class ConfirmAppointmentView(APIView):
+    serializer_class = ConfirmAppointmentSerializer
+
+    def get(self, request, ticket_number):
+        try:
+            appointment = Appointment.objects.get(ticket_number=ticket_number)
+        except ObjectDoesNotExist:
+            return Response({"error": "Appointment not found"}, status=status.HTTP_404_NOT_FOUND)
+        serializer = self.serializer_class(appointment)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
