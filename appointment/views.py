@@ -1,3 +1,4 @@
+from django.db import transaction
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -9,6 +10,7 @@ from django.core.exceptions import ObjectDoesNotExist
 class ScheduleAppointmentView(APIView):
     serializer_class = ScheduleAppointmentSerializer
 
+    @transaction.atomic
     def post(self, request):
         try:
             serializer = self.serializer_class(data=request.data)
@@ -27,6 +29,7 @@ class ScheduleAppointmentView(APIView):
 class RescheduleAppointmentView(APIView):
     serializer_class = RescheduleAppointmentSerializer
 
+    @transaction.atomic
     def put(self, request, ticket_number):
         try:
             appointment = Appointment.objects.get(ticket_number=ticket_number)
@@ -69,7 +72,7 @@ class CancelAppointmentView(APIView):
         appointment.status = 'cancelled'
         appointment.save()
 
-        # cancellation confirmation message
+        # cancellation confirmation message logic
         return Response({"message": "Appointment cancelled"}, status=status.HTTP_200_OK)
 
 
@@ -81,7 +84,10 @@ class ConfirmAppointmentView(APIView):
             appointment = Appointment.objects.get(ticket_number=ticket_number)
         except ObjectDoesNotExist:
             return Response({"error": "Appointment not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        # confirmation message
         serializer = self.serializer_class(appointment)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 
