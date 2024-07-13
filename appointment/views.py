@@ -58,3 +58,16 @@ class RescheduleAppointmentView(APIView):
             return Response(ConfirmAppointmentSerializer(appointment).data, status=status.HTTP_200_OK)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class CancelAppointmentView(APIView):
+    def delete(self, request, ticket_number):
+        try:
+            appointment = Appointment.objects.get(ticket_number=ticket_number)
+        except ObjectDoesNotExist:
+            return Response({"error": "Appointment not found"}, status=status.HTTP_404_NOT_FOUND)
+        appointment.status = 'cancelled'
+        appointment.save()
+
+        # cancellation confirmation message
+        return Response({"message": "Appointment cancelled"}, status=status.HTTP_200_OK)
