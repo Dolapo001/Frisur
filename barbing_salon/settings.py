@@ -9,40 +9,55 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
+from decouple import config
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-#+hpoxn@8cr0n9%4i3z5ji@t&dipg(43d1yc=i&&*%2g76wch6'
+#SECRET_KEY = config('SECRET_KEY')
 
+#SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
+SECRET_KEY = 'django-insecure-#+hpoxn@8cr0n9%4i3z5ji@t&dipg(43d1yc=i&&*%2g76wch6'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
 
-INSTALLED_APPS = [
+DJANGO_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'jazzmin'
+]
+
+LOCAL_APPS = [
+
     'appointment.apps.AppointmentConfig',
     'dashboard.apps.DashboardConfig',
-
-    #third party
-    'rest_framework',
 ]
+
+
+THIRD_PARTY_APPS = [
+    'rest_framework',
+    "drf_spectacular"
+]
+
+INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + THIRD_PARTY_APPS
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -53,6 +68,19 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Digital Salon API",
+    "DESCRIPTION": """
+    🚀 Digital Salon: Digitize salon operation for increase productivity and enhanced customer
+satisfaction
+    """,
+    "VERSION": "1.0.0",
+    #"CONTACT": "ayflix0@gmail.com",
+    "SCHEMA_PATH_PREFIX": r'/api/v[0-9]',
+    "SERVE_INCLUDE_SCHEMA": False,
+    "DISABLE_ERRORS_AND_WARNINGS": True,
+}
 
 ROOT_URLCONF = 'barbing_salon.urls'
 
