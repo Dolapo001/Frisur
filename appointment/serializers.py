@@ -7,6 +7,10 @@ class ScheduleAppointmentSerializer(serializers.ModelSerializer):
         model = Appointment
         fields = ['date', 'time', 'stylist', 'service', 'customer_name', 'customer_email', 'customer_phone']
 
+    def create(self, validated_data):
+        appointment = Appointment.objects.create(**validated_data)
+        return appointment
+
 
 class RescheduleAppointmentSerializer(serializers.ModelSerializer):
     class Meta:
@@ -23,7 +27,7 @@ class CancelAppointmentSerializer(serializers.ModelSerializer):
 class ConfirmAppointmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Appointment
-        fields = '__all__'
+        fields = ['ticket_number', 'date', 'time', 'stylist', 'service', 'customer_name', 'customer_email', 'customer_phone', 'status']
 
 
 class ReminderSerializer(serializers.ModelSerializer):
