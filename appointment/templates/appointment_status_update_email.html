@@ -1,20 +1,25 @@
-Appointment Confirmation
-
-Dear {{ customer_firstname }},
-
-Thank you for scheduling an appointment with us. Here are your appointment details:
-
-Stylist: {{ stylist }}
-Date: {{ date }}
-Time: {{ time }}
-Service Type: {{ service }}
-Ticket Number: {{ ticket_number }}
-
-You can manage your appointment using the links below:
-Reschedule Appointment: {{ reschedule_url }}
-Cancel Appointment: {{ cancel_url }}
-
-We look forward to seeing you!
-
-Best regards,
-{{ email_sender_name }}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appointment Status Update</title>
+</head>
+<body>
+    <h2>Appointment {{ status }}</h2>
+    <p>Hi {{ customer_firstname }},</p>
+    <p>We wanted to let you know that your appointment has been {{ status }}.</p>
+    {% if status == 'rescheduled' %}
+    <p>Here are your new appointment details:</p>
+    <ul>
+        <li><strong>Stylist:</strong> {{ stylist }}</li>
+        <li><strong>Date:</strong> {{ new_date }}</li>
+        <li><strong>Time:</strong> {{ new_time }}</li>
+        <li><strong>Service Type:</strong> {{ service }}</li>
+        <li><strong>Ticket Number:</strong> {{ ticket_number }}</li>
+    </ul>
+    {% endif %}
+    <p>If you have any questions, feel free to contact us.</p>
+    <p>Best regards,<br>{{ email_sender_name }}</p>
+</body>
+</html>

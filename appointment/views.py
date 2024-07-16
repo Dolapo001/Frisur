@@ -82,7 +82,6 @@ class RescheduleAppointmentView(APIView):
                     return Response({"error": "Invalid stylist"}, status=status.HTTP_400_BAD_REQUEST)
                 appointment.stylist = new_stylist
 
-                # Check for double-booking
             if Appointment.objects.filter(date=appointment.date, time=appointment.time,
                                           stylist=appointment.stylist).exclude(ticket_number=ticket_number).exists():
                 return Response({"error": "This time slot is already booked for the selected stylist."},
@@ -91,7 +90,7 @@ class RescheduleAppointmentView(APIView):
             appointment.status = 'rescheduled'
             appointment.save()
 
-            send_status_update_email(appointment)
+            send_status_update_email(request, appointment, 'rescheduled', new_date, new_time, new_stylist)
 
             return Response(ConfirmAppointmentSerializer(appointment).data, status=status.HTTP_200_OK)
 
