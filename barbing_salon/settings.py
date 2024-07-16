@@ -9,21 +9,21 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
+from dotenv import load_dotenv
 import os
+
+load_dotenv()
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-from decouple import config
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-#SECRET_KEY = config('SECRET_KEY')
 
-#SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
-SECRET_KEY = 'django-insecure-#+hpoxn@8cr0n9%4i3z5ji@t&dipg(43d1yc=i&&*%2g76wch6'
+SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -51,7 +51,9 @@ LOCAL_APPS = [
 
 THIRD_PARTY_APPS = [
     'rest_framework',
-    "drf_spectacular"
+    "drf_spectacular",
+    'corsheaders',
+    'mailer',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + THIRD_PARTY_APPS
@@ -60,6 +62,7 @@ REST_FRAMEWORK = {
 }
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -87,7 +90,7 @@ ROOT_URLCONF = 'barbing_salon.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates']
+        'DIRS': [BASE_DIR / 'appointment/templates']
         ,
         'APP_DIRS': True,
         'OPTIONS': {
@@ -155,3 +158,9 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+GMAIL_USERNAME = os.getenv('GMAIL_USERNAME')
+GMAIL_PASSWORD = os.getenv('GMAIL_PASSWORD')
+EMAIL_SENDER_NAME = os.getenv('EMAIL_SENDER_NAME')
+EMAIL_SENDER_ADDRESS = os.getenv('EMAIL_SENDER_ADDRESS')

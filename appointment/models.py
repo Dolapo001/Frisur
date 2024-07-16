@@ -22,6 +22,7 @@ STATUS_CHOICES = (
     ('rescheduled', 'Rescheduled')
 )
 
+
 class Appointment(models.Model):
     ticket_number = models.CharField(max_length=12, unique=True, primary_key=True, editable=False)
     date = models.DateField()

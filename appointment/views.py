@@ -3,6 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Appointment, STYLIST_CHOICES
+from drf_spectacular.utils import extend_schema, OpenApiResponse, OpenApiParameter
 from .serializers import *
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -10,6 +11,15 @@ from django.core.exceptions import ObjectDoesNotExist
 class ScheduleAppointmentView(APIView):
     serializer_class = ScheduleAppointmentSerializer
 
+    @extend_schema(
+        request=ScheduleAppointmentSerializer,
+        responses={
+            201: OpenApiResponse(response=ConfirmAppointmentSerializer),
+            500: OpenApiResponse(description="Internal Server Error"),
+            400: OpenApiResponse(description="An appointment with the specified date, time, and stylist already exists.")
+        },
+        description="Endpoint to schedule a new appointment."
+    )
     @transaction.atomic
     def post(self, request):
         try:
@@ -18,7 +28,6 @@ class ScheduleAppointmentView(APIView):
                 try:
                     appointment = serializer.save()
                     confirm_serializer = ConfirmAppointmentSerializer(appointment)
-                    # confirmation message logic here
                     return Response(confirm_serializer.data, status=status.HTTP_201_CREATED)
                 except IntegrityError:
                     return Response({
@@ -35,6 +44,20 @@ class ScheduleAppointmentView(APIView):
 class RescheduleAppointmentView(APIView):
     serializer_class = RescheduleAppointmentSerializer
 
+    @extend_schema(
+        request=RescheduleAppointmentSerializer,
+        parameters=[
+            OpenApiParameter("ticket_number", type=str, location=OpenApiParameter.PATH,
+                             description="Ticket number of the appointment to reschedule")
+        ],
+        responses={
+            201: OpenApiResponse(response=ConfirmAppointmentSerializer),
+            400: OpenApiResponse(description="This time slot is already booked for the selected stylist."),
+            404: OpenApiResponse(description="Appointment not found."),
+            500: OpenApiResponse(description="Internal Server Error.")
+        },
+        description="Endpoint to reschedule an existing appointment."
+    )
     @transaction.atomic
     def put(self, request, ticket_number):
         try:
@@ -74,6 +97,19 @@ class RescheduleAppointmentView(APIView):
 
 
 class CancelAppointmentView(APIView):
+    @extend_schema(
+        request=RescheduleAppointmentSerializer,
+        parameters=[
+            OpenApiParameter("ticket_number", type=str, location=OpenApiParameter.PATH,
+                             description="Ticket number of the appointment to cancel")
+        ],
+        responses={
+            201: OpenApiResponse(response="Cancelled."),
+            404: OpenApiResponse(description="Appointment not found."),
+            500: OpenApiResponse(description="Internal Server Error.")
+        },
+        description="Endpoint to cancel an existing appointment."
+    )
     @transaction.atomic
     def delete(self, request, ticket_number):
         try:
@@ -91,19 +127,32 @@ class CancelAppointmentView(APIView):
 class ConfirmAppointmentView(APIView):
     serializer_class = ConfirmAppointmentSerializer
 
+    @extend_schema(
+        request=RescheduleAppointmentSerializer,
+        parameters=[
+            OpenApiParameter("ticket_number", type=str, location=OpenApiParameter.PATH,
+                             description="Ticket number of the appointment for confirmation")
+        ],
+        responses={
+            200: OpenApiResponse(response="OK."),
+            400:OpenApiResponse(response="Cannot get details of a cancelled appointment."),
+            404: OpenApiResponse(description="Appointment not found."),
+            500: OpenApiResponse(description="Internal Server Error.")
+        },
+        description="Endpoint to get details of an existing appointment."
+    )
     @transaction.atomic
     def get(self, request, ticket_number):
-        try:
-            appointment = Appointment.objects.get(ticket_number=ticket_number)
-        except ObjectDoesNotExist:
-            return Response({"error": "Appointment not found"}, status=status.HTTP_404_NOT_FOUND)
+        def get(self, request, ticket_number):
+            try:
+                appointment = Appointment.objects.get(ticket_number=ticket_number)
+            except ObjectDoesNotExist:
+                return Response({"error": "Appointment not found"}, status=status.HTTP_404_NOT_FOUND)
 
-        if appointment.status == 'cancelled':
-            return Response({"error": "Cannot confirm a cancelled appointment"}, status=status.HTTP_400_BAD_REQUEST)
+            if appointment.status == 'cancelled':
+                return Response({"error": "Cannot confirm a cancelled appointment"}, status=status.HTTP_400_BAD_REQUEST)
 
-        # confirmation message
-        serializer = self.serializer_class(appointment)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-
+            # confirmation message
+            serializer = self.serializer_class(appointment)
+            return Response(serializer.data, status=status.HTTP_200_OK)
 

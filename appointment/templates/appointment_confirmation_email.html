@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Appointment Confirmation</title>
+</head>
+<body>
+    <h1>Appointment Confirmation</h1>
+    <p>Dear {{ customer_name }},</p>
+    <p>Thank you for scheduling an appointment with us. Here are your appointment details:</p>
+    <ul>
+        <li><strong>Stylist:</strong> {{ stylist }}</li>
+        <li><strong>Date:</strong> {{ date }}</li>
+        <li><strong>Time:</strong> {{ time }}</li>
+        <li><strong>Service Type:</strong> {{ service_type }}</li>
+        <li><strong>Appointment ID:</strong> {{ appointment_id }}</li>
+        <li><strong>Ticket Number:</strong> {{ ticket_number }}</li>
+    </ul>
+    <p>We look forward to serving you.</p>
+    <p>Best regards,</p>
+    <p>YourCompanyName</p>
+</body>
+</html>
