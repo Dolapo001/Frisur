@@ -6,6 +6,7 @@ from .models import Appointment, STYLIST_CHOICES
 from drf_spectacular.utils import extend_schema, OpenApiResponse, OpenApiParameter
 from .serializers import *
 from django.core.exceptions import ObjectDoesNotExist
+from .email_utils import send_confirmation_email
 
 
 class ScheduleAppointmentView(APIView):
@@ -27,6 +28,7 @@ class ScheduleAppointmentView(APIView):
             if serializer.is_valid():
                 try:
                     appointment = serializer.save()
+                    send_confirmation_email(appointment)
                     confirm_serializer = ConfirmAppointmentSerializer(appointment)
                     return Response(confirm_serializer.data, status=status.HTTP_201_CREATED)
                 except IntegrityError:

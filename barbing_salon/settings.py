@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
+import environ
 from dotenv import load_dotenv
 import os
 
@@ -114,6 +115,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
+        'OPTION': {
+            'timeout': 30,
+        }
     }
 }
 
@@ -159,8 +163,20 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+env = environ.Env()
+environ.Env.read_env()
 
-GMAIL_USERNAME = os.getenv('GMAIL_USERNAME')
-GMAIL_PASSWORD = os.getenv('GMAIL_PASSWORD')
-EMAIL_SENDER_NAME = os.getenv('EMAIL_SENDER_NAME')
-EMAIL_SENDER_ADDRESS = os.getenv('EMAIL_SENDER_ADDRESS')
+EMAIL_HOST = env('EMAIL_HOST')
+EMAIL_PORT = env('EMAIL_PORT')
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+EMAIL_USE_TLS = env.bool('EMAIL_USE_TLS')
+EMAIL_USE_SSL = env.bool('EMAIL_USE_SSL')
+
+# Custom email sender details
+EMAIL_SENDER_NAME = env('EMAIL_SENDER_NAME', default='Frisur Barbing Salon')
+EMAIL_SENDER_ADDRESS = env('EMAIL_SENDER_ADDRESS', default='contact@frisur.com')
+
+# Email backend configuration
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+DEFAULT_FROM_EMAIL = f"{EMAIL_SENDER_NAME} <{EMAIL_SENDER_ADDRESS}>"

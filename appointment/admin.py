@@ -4,13 +4,13 @@ from .models import Appointment
 
 @admin.register(Appointment)
 class AppointmentAdmin(admin.ModelAdmin):
-    list_display = ['ticket_number', 'date', 'time', 'stylist', 'service', 'customer_name', 'customer_email', 'customer_phone', 'status']
-    search_fields = ['ticket_number', 'customer_name', 'customer_email', 'customer_phone', 'stylist__stylist', 'service__service']
+    list_display = ['ticket_number', 'date', 'time', 'stylist', 'service', 'customer_firstname', 'customer_email', 'customer_phone', 'status']
+    search_fields = ['ticket_number', 'customer_firstname', 'customer_email', 'customer_phone', 'stylist__stylist', 'service__service']
     list_filter = ['date', 'time', 'stylist', 'service', 'status']
     ordering = ['date', 'time', 'stylist']
     fieldsets = (
         (None, {
-            'fields': ('ticket_number', 'date', 'time', 'stylist', 'service', 'customer_name', 'customer_email', 'customer_phone', 'status', 'feedback')
+            'fields': ('ticket_number', 'date', 'time', 'stylist', 'service', 'customer_firstname', 'customer_email', 'customer_phone', 'status', 'feedback')
         }),
     )
     readonly_fields = ['ticket_number']

@@ -1,22 +1,22 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Appointment Confirmation</title>
 </head>
 <body>
-    <h1>Appointment Confirmation</h1>
-    <p>Dear {{ customer_name }},</p>
+    <h2>Appointment Confirmation</h2>
+    <p>Hi {{ customer_firstname }},</p>
     <p>Thank you for scheduling an appointment with us. Here are your appointment details:</p>
     <ul>
         <li><strong>Stylist:</strong> {{ stylist }}</li>
         <li><strong>Date:</strong> {{ date }}</li>
         <li><strong>Time:</strong> {{ time }}</li>
-        <li><strong>Service Type:</strong> {{ service_type }}</li>
-        <li><strong>Appointment ID:</strong> {{ appointment_id }}</li>
+        <li><strong>Service Type:</strong> {{ service }}</li>
         <li><strong>Ticket Number:</strong> {{ ticket_number }}</li>
     </ul>
-    <p>We look forward to serving you.</p>
-    <p>Best regards,</p>
-    <p>YourCompanyName</p>
+    <p>We look forward to seeing you!</p>
+    <p>Best regards,<br>{{ email_sender_name }}</p>
 </body>
 </html>

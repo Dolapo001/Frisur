@@ -1,0 +1,15 @@
+Appointment Confirmation
+
+Dear {{ customer_firstname }},
+
+Thank you for scheduling an appointment with us. Here are your appointment details:
+
+Stylist: {{ stylist }}
+Date: {{ date }}
+Time: {{ time }}
+Service Type: {{ service }}
+Ticket Number: {{ ticket_number }}
+
+We look forward to seeing you!
+
+Best regards, {{ email_sender_name }}
