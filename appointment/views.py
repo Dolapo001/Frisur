@@ -115,13 +115,13 @@ class CancelAppointmentView(APIView):
     def delete(self, request, ticket_number):
         try:
             appointment = Appointment.objects.get(ticket_number=ticket_number)
-        except ObjectDoesNotExist:
+        except Appointment.DoesNotExist:
             return Response({"error": "Appointment not found"}, status=status.HTTP_404_NOT_FOUND)
 
-        # Directly update the status to 'cancelled' without calling save()
         Appointment.objects.filter(ticket_number=ticket_number).update(status='cancelled')
 
-        send_status_update_email(appointment)
+        send_status_update_email(request, appointment, status='cancelled')
+
         return Response({"message": "Appointment cancelled"}, status=status.HTTP_200_OK)
 
 

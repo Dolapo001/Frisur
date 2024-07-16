@@ -47,7 +47,7 @@ def send_status_update_email(request, appointment, status, new_date=None, new_ti
     context = {
         'customer_firstname': appointment.customer_firstname,
         'status': status,
-        'stylist': new_stylist if new_stylist else appointment.stylist,
+        'stylist': new_stylist,
         'service': appointment.service,
         'ticket_number': appointment.ticket_number,
         'email_sender_name': settings.EMAIL_SENDER_NAME,
@@ -64,3 +64,4 @@ def send_status_update_email(request, appointment, status, new_date=None, new_ti
         logger.info(f"Status update email sent successfully to {recipient}")
     except Exception as e:
         logger.error(f"Failed to send status update email to {recipient}: {str(e)}")
+
