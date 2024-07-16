@@ -16,6 +16,11 @@
         <li><strong>Service Type:</strong> {{ service }}</li>
         <li><strong>Ticket Number:</strong> {{ ticket_number }}</li>
     </ul>
+    <p>You can manage your appointment using the links below:</p>
+    <ul>
+        <li><a href="{{ reschedule_url }}">Reschedule Appointment</a></li>
+        <li><a href="{{ cancel_url }}">Cancel Appointment</a></li>
+    </ul>
     <p>We look forward to seeing you!</p>
     <p>Best regards,<br>{{ email_sender_name }}</p>
 </body>

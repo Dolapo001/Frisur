@@ -1,0 +1,19 @@
+Appointment {{ status }}
+
+Dear {{ customer_firstname }},
+
+We wanted to let you know that your appointment has been {{ status }}.
+
+{% if status == 'rescheduled' %}
+Here are your new appointment details:
+Stylist: {{ stylist }}
+Date: {{ new_date }}
+Time: {{ new_time }}
+Service Type: {{ service }}
+Ticket Number: {{ ticket_number }}
+{% endif %}
+
+If you have any questions, feel free to contact us.
+
+Best regards,
+{{ email_sender_name }}

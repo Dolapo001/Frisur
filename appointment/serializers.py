@@ -5,7 +5,8 @@ from .models import Appointment
 class ScheduleAppointmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Appointment
-        fields = ['date', 'time', 'stylist', 'service', 'customer_firstname', 'customer_lastname', 'customer_email', 'customer_phone']
+        fields = ['date', 'time', 'stylist', 'service', 'customer_firstname', 'customer_lastname', 'customer_email',
+                  'customer_phone']
 
     def create(self, validated_data):
         appointment = Appointment.objects.create(**validated_data)
@@ -27,7 +28,8 @@ class CancelAppointmentSerializer(serializers.ModelSerializer):
 class ConfirmAppointmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Appointment
-        fields = ['ticket_number', 'date', 'time', 'stylist', 'service', 'customer_name', 'customer_email', 'customer_phone', 'status']
+        fields = ['ticket_number', 'date', 'time', 'stylist', 'service', 'customer_name', 'customer_email',
+                  'customer_phone', 'status']
 
 
 class ReminderSerializer(serializers.ModelSerializer):

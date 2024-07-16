@@ -6,7 +6,7 @@ from .models import Appointment, STYLIST_CHOICES
 from drf_spectacular.utils import extend_schema, OpenApiResponse, OpenApiParameter
 from .serializers import *
 from django.core.exceptions import ObjectDoesNotExist
-from .email_utils import send_confirmation_email
+from .email_utils import send_confirmation_email, send_status_update_email
 
 
 class ScheduleAppointmentView(APIView):
@@ -91,7 +91,7 @@ class RescheduleAppointmentView(APIView):
             appointment.status = 'rescheduled'
             appointment.save()
 
-            # Confirmation message logic can be added here if needed
+            send_status_update_email(appointment)
 
             return Response(ConfirmAppointmentSerializer(appointment).data, status=status.HTTP_200_OK)
 
@@ -122,7 +122,7 @@ class CancelAppointmentView(APIView):
         # Directly update the status to 'cancelled' without calling save()
         Appointment.objects.filter(ticket_number=ticket_number).update(status='cancelled')
 
-        # cancellation confirmation message logic
+        send_status_update_email(appointment)
         return Response({"message": "Appointment cancelled"}, status=status.HTTP_200_OK)
 
 
