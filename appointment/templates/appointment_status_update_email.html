@@ -8,7 +8,7 @@
 <body>
     <h2>Appointment {{ status }}</h2>
     <p>Hi {{ customer_firstname }},</p>
-    <p>We wanted to let you know that your appointment has been {{ status }}.</p>
+    <p>Your appointment has been {{ status }}.</p>
     {% if status == 'rescheduled' %}
     <p>Here are your new appointment details:</p>
     <ul>

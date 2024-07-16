@@ -2,7 +2,7 @@ Appointment {{ status }}
 
 Dear {{ customer_firstname }},
 
-We wanted to let you know that your appointment has been {{ status }}.
+Your appointment has been {{ status }}.
 
 {% if status == 'rescheduled' %}
 Here are your new appointment details:
