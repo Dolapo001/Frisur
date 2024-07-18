@@ -93,7 +93,7 @@ class RescheduleAppointmentView(APIView):
             appointment.status = 'rescheduled'
             appointment.save()
 
-            send_status_update_email(request, appointment, 'rescheduled', new_date, new_time, new_stylist)
+            send_status_update_email(request, appointment, 'rescheduled', new_date, new_time, new_end_time, new_stylist)
 
             return Response(ConfirmAppointmentSerializer(appointment).data, status=status.HTTP_200_OK)
 

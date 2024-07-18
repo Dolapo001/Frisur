@@ -30,6 +30,17 @@ class RescheduleAppointmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Appointment
         fields = ['date', 'time', 'stylist', 'service', 'end_time']
+        read_only_fields = ['end_time']
+
+    def validate(self, data):
+        start_time = data.get('time')
+        if start_time:
+            start_datetime = datetime.combine(data['date'], start_time)
+            duration = 30
+            end_time = (start_datetime + timedelta(minutes=duration)).time()
+            data['end_time'] = end_time
+
+        return data
 
 
 class CancelAppointmentSerializer(serializers.ModelSerializer):
