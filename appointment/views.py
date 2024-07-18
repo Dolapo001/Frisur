@@ -28,7 +28,7 @@ class ScheduleAppointmentView(APIView):
             if serializer.is_valid():
                 try:
                     appointment = serializer.save()
-                    send_confirmation_email(appointment)
+                    send_confirmation_email(request, appointment)
                     confirm_serializer = ConfirmAppointmentSerializer(appointment)
                     return Response(confirm_serializer.data, status=status.HTTP_201_CREATED)
                 except IntegrityError:
@@ -71,12 +71,15 @@ class RescheduleAppointmentView(APIView):
         if serializer.is_valid():
             new_date = serializer.validated_data.get('date')
             new_time = serializer.validated_data.get('time')
+            new_end_time = serializer.validated_data.get('end_time')
             new_stylist = serializer.validated_data.get('stylist')
 
             if new_date:
                 appointment.date = new_date
             if new_time:
                 appointment.time = new_time
+            if new_end_time:
+                appointment.end_time = new_end_time
             if new_stylist:
                 if new_stylist not in dict(STYLIST_CHOICES).keys():
                     return Response({"error": "Invalid stylist"}, status=status.HTTP_400_BAD_REQUEST)
@@ -136,7 +139,7 @@ class ConfirmAppointmentView(APIView):
         ],
         responses={
             200: OpenApiResponse(response="OK."),
-            400:OpenApiResponse(response="Cannot get details of a cancelled appointment."),
+            400: OpenApiResponse(response="Cannot get details of a cancelled appointment."),
             404: OpenApiResponse(description="Appointment not found."),
             500: OpenApiResponse(description="Internal Server Error.")
         },
@@ -144,16 +147,14 @@ class ConfirmAppointmentView(APIView):
     )
     @transaction.atomic
     def get(self, request, ticket_number):
-        def get(self, request, ticket_number):
-            try:
-                appointment = Appointment.objects.get(ticket_number=ticket_number)
-            except ObjectDoesNotExist:
-                return Response({"error": "Appointment not found"}, status=status.HTTP_404_NOT_FOUND)
+        try:
+            appointment = Appointment.objects.get(ticket_number=ticket_number)
+        except ObjectDoesNotExist:
+            return Response({"error": "Appointment not found"}, status=status.HTTP_404_NOT_FOUND)
 
-            if appointment.status == 'cancelled':
-                return Response({"error": "Cannot confirm a cancelled appointment"}, status=status.HTTP_400_BAD_REQUEST)
+        if appointment.status == 'cancelled':
+            return Response({"error": "Cannot confirm a cancelled appointment"}, status=status.HTTP_400_BAD_REQUEST)
 
-            # confirmation message
-            serializer = self.serializer_class(appointment)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-
+        # confirmation message
+        serializer = self.serializer_class(appointment)
+        return Response(serializer.data, status=status.HTTP_200_OK)

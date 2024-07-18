@@ -4,22 +4,60 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Appointment Status Update</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #f0f0f0;
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        h2 {
+            color: #333;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+        .status-update {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .footer {
+            margin-top: 20px;
+            color: #666;
+            font-size: 14px;
+        }
+        .footer p {
+            margin: 0; 
+        }
+    </style>
 </head>
 <body>
-    <h2>Appointment {{ status }}</h2>
-    <p>Hi {{ customer_firstname }},</p>
-    <p>Your appointment has been {{ status }}.</p>
-    {% if status == 'rescheduled' %}
-    <p>Here are your new appointment details:</p>
-    <ul>
-        <li><strong>Stylist:</strong> {{ stylist }}</li>
-        <li><strong>Date:</strong> {{ new_date }}</li>
-        <li><strong>Time:</strong> {{ new_time }}</li>
-        <li><strong>Service Type:</strong> {{ service }}</li>
-        <li><strong>Ticket Number:</strong> {{ ticket_number }}</li>
-    </ul>
-    {% endif %}
-    <p>If you have any questions, feel free to contact us.</p>
-    <p>Best regards,<br>{{ email_sender_name }}</p>
+    <div class="status-update">
+        <h2>Appointment {{ status }}</h2>
+        <p>Dear {{ customer_firstname }},</p>
+        <p>Your appointment has been {{ status }}.</p>
+        {% if status == 'rescheduled' %}
+        <p>Here are your new appointment details:</p>
+        <ul>
+            <li><strong>Stylist:</strong> {{ stylist }}</li>
+            <li><strong>Date:</strong> {{ new_date }}</li>
+            <li><strong>Time:</strong> {{ new_time }} - {{ new_end_time }}</li>
+            <li><strong>Service Type:</strong> {{ service }}</li>
+            <li><strong>Ticket Number:</strong> {{ ticket_number }}</li>
+        </ul>
+        {% endif %}
+        <p>If you have any questions, feel free to contact us.</p>
+    </div>
+    <div class="footer">
+        <p>Best regards,<br>{{ email_sender_name }}.</p>
+    </div>
 </body>
 </html>

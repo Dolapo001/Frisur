@@ -6,7 +6,7 @@ Thank you for scheduling an appointment with us. Here are your appointment detai
 
 Stylist: {{ stylist }}
 Date: {{ date }}
-Time: {{ time }}
+Your appointment is from {{ time }} to {{ end_time }}
 Service Type: {{ service }}
 Ticket Number: {{ ticket_number }}
 

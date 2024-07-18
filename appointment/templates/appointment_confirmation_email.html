@@ -4,24 +4,78 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Appointment Confirmation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #f0f0f0;
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        h2 {
+            color: #333;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+        .appointment-details {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .manage-links {
+            margin-top: 20px;
+            list-style-type: none;
+            padding: 0;
+        }
+        .manage-links li {
+            display: inline-block;
+            margin-right: 10px;
+        }
+        .manage-links li a {
+            text-decoration: none;
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 15px;
+            border-radius: 5px;
+        }
+        .footer {
+            margin-top: 20px;
+            color: #666;
+            font-size: 14px;
+        }
+        .footer p {
+            margin: 0; 
+        }
+    </style>
 </head>
 <body>
-    <h2>Appointment Confirmation</h2>
-    <p>Hi {{ customer_firstname }},</p>
-    <p>Thank you for scheduling an appointment with us. Here are your appointment details:</p>
-    <ul>
-        <li><strong>Stylist:</strong> {{ stylist }}</li>
-        <li><strong>Date:</strong> {{ date }}</li>
-        <li><strong>Time:</strong> {{ time }}</li>
-        <li><strong>Service Type:</strong> {{ service }}</li>
-        <li><strong>Ticket Number:</strong> {{ ticket_number }}</li>
-    </ul>
-    <p>You can manage your appointment using the links below:</p>
-    <ul>
-        <li><a href="{{ reschedule_url }}">Reschedule Appointment</a></li>
-        <li><a href="{{ cancel_url }}">Cancel Appointment</a></li>
-    </ul>
-    <p>We look forward to seeing you!</p>
-    <p>Best regards,<br>{{ email_sender_name }}</p>
+    <div class="appointment-details">
+        <h2>Appointment Confirmation</h2>
+        <p>Dear {{ customer_firstname }},</p>
+        <p>Thank you for scheduling an appointment with us. Here are your appointment details:</p>
+        <ul>
+            <li><strong>Stylist:</strong> {{ stylist }}</li>
+            <li><strong>Date:</strong> {{ date }}</li>
+            <li><strong>Time:</strong> {{ time }} - {{ end_time }}</li>
+            <li><strong>Service Type:</strong> {{ service }}</li>
+            <li><strong>Ticket Number:</strong> {{ ticket_number }}</li>
+        </ul>
+        <p>You can manage your appointment using the links below:</p>
+        <ul class="manage-links">
+            <li><a href="{{ reschedule_url }}">Reschedule Appointment</a></li>
+            <li><a href="{{ cancel_url }}">Cancel Appointment</a></li>
+        </ul>
+        <p>We look forward to seeing you!</p>
+    </div>
+    <div class="footer">
+        <p>Best regards,<br>{{ email_sender_name }}.</p>
+    </div>
 </body>
 </html>

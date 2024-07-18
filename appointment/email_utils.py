@@ -20,6 +20,7 @@ def send_confirmation_email(request, appointment):
         'stylist': appointment.stylist,
         'date': appointment.date,
         'time': appointment.time,
+        'end_time': appointment.end_time,
         'service': appointment.service,
         'ticket_number': appointment.ticket_number,
         'email_sender_name': settings.EMAIL_SENDER_NAME,
@@ -39,7 +40,8 @@ def send_confirmation_email(request, appointment):
         logger.error(f"Failed to send email to {recipient}: {str(e)}")
 
 
-def send_status_update_email(request, appointment, status, new_date=None, new_time=None, new_stylist=None):
+def send_status_update_email(request, appointment, status, new_date=None, new_time=None, new_stylist=None,
+                             new_end_time=None):
     subject = f'Appointment {status.capitalize()}'
     sender = settings.DEFAULT_FROM_EMAIL
     recipient = [appointment.customer_email]
@@ -47,12 +49,13 @@ def send_status_update_email(request, appointment, status, new_date=None, new_ti
     context = {
         'customer_firstname': appointment.customer_firstname,
         'status': status,
-        'stylist': new_stylist,
+        'stylist': new_stylist if new_stylist != 'random' else appointment.stylist,
         'service': appointment.service,
         'ticket_number': appointment.ticket_number,
         'email_sender_name': settings.EMAIL_SENDER_NAME,
         'new_date': new_date,
         'new_time': new_time,
+        'new_end_time': new_end_time
     }
     email_html_message = render_to_string('appointment_status_update_email.html', context)
     email_plain_message = render_to_string('status_update_email.txt', context)
@@ -64,4 +67,3 @@ def send_status_update_email(request, appointment, status, new_date=None, new_ti
         logger.info(f"Status update email sent successfully to {recipient}")
     except Exception as e:
         logger.error(f"Failed to send status update email to {recipient}: {str(e)}")
-
