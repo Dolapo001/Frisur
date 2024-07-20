@@ -7,6 +7,7 @@ from drf_spectacular.utils import extend_schema, OpenApiResponse, OpenApiParamet
 from .serializers import *
 from django.core.exceptions import ObjectDoesNotExist
 from .email_utils import send_confirmation_email, send_status_update_email
+from .tasks import send_reminder_email_task
 
 
 class ScheduleAppointmentView(APIView):
@@ -29,6 +30,8 @@ class ScheduleAppointmentView(APIView):
                 try:
                     appointment = serializer.save()
                     send_confirmation_email(request, appointment)
+                    reminder_time = appointment.datetime - timedelta(hours=1)
+                    send_reminder_email_task.apply_async((appointment.ticket_number,), eta=reminder_time)
                     confirm_serializer = ConfirmAppointmentSerializer(appointment)
                     return Response(confirm_serializer.data, status=status.HTTP_201_CREATED)
                 except IntegrityError:
@@ -94,6 +97,8 @@ class RescheduleAppointmentView(APIView):
             appointment.save()
 
             send_status_update_email(request, appointment, 'rescheduled', new_date, new_time, new_end_time, new_stylist)
+            reminder_time = appointment.datetime - timedelta(hours=1)
+            send_reminder_email_task.apply_async((appointment.ticket_number,), eta=reminder_time)
 
             return Response(ConfirmAppointmentSerializer(appointment).data, status=status.HTTP_200_OK)
 

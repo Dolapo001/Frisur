@@ -12,9 +12,10 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 import environ
 from dotenv import load_dotenv
 import os
+from pathlib import Path
 
 load_dotenv()
-from pathlib import Path
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -29,7 +30,6 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-
 
 # Application definition
 
@@ -49,17 +49,22 @@ LOCAL_APPS = [
     'dashboard.apps.DashboardConfig',
 ]
 
-
 THIRD_PARTY_APPS = [
     'rest_framework',
     "drf_spectacular",
+    'rest_framework_simplejwt',
     'corsheaders',
     'mailer',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + THIRD_PARTY_APPS
+
 REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ],
 }
 
 MIDDLEWARE = [
@@ -87,12 +92,14 @@ satisfaction
 }
 
 ROOT_URLCONF = 'barbing_salon.urls'
+AUTH_USER_MODEL = 'dashboard.User'
+LOGOUT_REDIRECT_URL = '/login/'
+CSRF_TRUSTED_ORIGINS = ['http://localhost:8000']
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'appointment/templates']
-        ,
+        'DIRS': [BASE_DIR / 'appointment/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -107,7 +114,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'barbing_salon.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
@@ -120,7 +126,6 @@ DATABASES = {
         }
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -140,7 +145,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
@@ -151,7 +155,6 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
@@ -180,3 +183,24 @@ EMAIL_SENDER_ADDRESS = env('EMAIL_SENDER_ADDRESS', default='contact@frisur.com')
 # Email backend configuration
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 DEFAULT_FROM_EMAIL = f"{EMAIL_SENDER_NAME} <{EMAIL_SENDER_ADDRESS}>"
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+SESSION_COOKIE_NAME = 'salon_session'
+
+SESSION_COOKIE_AGE = 3600
+SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_HTTPONLY = True
+
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+]
+
+
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'Africa/Lagos'

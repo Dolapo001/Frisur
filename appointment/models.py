@@ -1,6 +1,8 @@
 from django.db import models, IntegrityError
 from datetime import datetime, timedelta
 import random
+from django.utils import timezone
+
 
 STYLIST_CHOICES = (
     ('Pastor', 'Pastor'),
@@ -46,6 +48,10 @@ class Appointment(models.Model):
             return f"{self.customer_firstname} {self.customer_lastname}"
         else:
             return self.customer_firstname
+
+    @property
+    def datetime(self):
+        return timezone.make_aware(datetime.combine(self.date, self.time))
 
     def save(self, *args, **kwargs):
         if not self.ticket_number:

@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from appointment.models import Appointment
+from .models import User
 
 
 class AppointmentListSerializer(serializers.ModelSerializer):
@@ -34,3 +35,15 @@ class AppointmentDetailsSerializer(serializers.ModelSerializer):
             'service',
             'special_request',
         ]
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['email', 'username']
+
+
+class LoginSerializer(serializers.Serializer):
+    username = serializers.CharField(max_length=120)
+    password = serializers.CharField(max_length=150, min_length=6, write_only=True)
+

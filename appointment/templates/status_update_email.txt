@@ -8,7 +8,7 @@ Your appointment has been {{ status }}.
 Here are your new appointment details:
 Stylist: {{ stylist }}
 Date: {{ new_date }}
-Time: {{ new_time }}
+Time: {{ new_time }} to {{ new_end_time }}
 Service Type: {{ service }}
 Ticket Number: {{ ticket_number }}
 {% endif %}

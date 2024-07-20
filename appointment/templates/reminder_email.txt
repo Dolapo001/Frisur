@@ -1,0 +1,21 @@
+Appointment Reminder
+
+Dear {{ customer_firstname }},
+
+Your appointment is coming up in 1hr :
+
+
+- Stylist: {{ stylist }}
+- Date: {{ date }}
+- Time: {{ time }} to {{ end_time }}
+- Service Type: {{ service }}
+- Ticket Number: {{ ticket_number }}
+
+If you need to make any changes, just click the links below:
+- Reschedule Appointment: {{ reschedule_url }}
+- Cancel Appointment: {{ cancel_url }}
+
+Thanks and see you soon!
+
+Cheers,
+{{ email_sender_name }}
