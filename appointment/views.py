@@ -10,6 +10,7 @@ from .serializers import *
 from django.core.exceptions import ObjectDoesNotExist
 from .email_utils import send_confirmation_email, send_status_update_email
 from .tasks import send_reminder_email_task
+from .utils import schedule_reminder_email, logger
 
 
 class ScheduleAppointmentView(APIView):
@@ -34,9 +35,8 @@ class ScheduleAppointmentView(APIView):
                     appointment_datetime = timezone.make_aware(datetime.combine(appointment.date, appointment.time))
                     appointment.datetime = appointment_datetime
                     appointment.save()
+                    schedule_reminder_email(appointment)
                     send_confirmation_email(request, appointment)
-                    reminder_time = appointment.datetime - timedelta(hours=1)
-                    send_reminder_email_task.apply_async((appointment.ticket_number,), eta=reminder_time)
 
                     confirm_serializer = ConfirmAppointmentSerializer(appointment)
                     return Response(confirm_serializer.data, status=status.HTTP_201_CREATED)
@@ -107,8 +107,10 @@ class RescheduleAppointmentView(APIView):
             appointment.save()
 
             send_status_update_email(request, appointment, 'rescheduled', new_date, new_time, new_end_time, new_stylist)
-            reminder_time = appointment.datetime - timedelta(hours=1)
-            send_reminder_email_task.apply_async((appointment.ticket_number,), eta=reminder_time)
+
+            # Schedule reminder email
+            schedule_reminder_email(appointment)
+            logger.info(f"Appointment rescheduled: {appointment.ticket_number}")
             return Response(ConfirmAppointmentSerializer(appointment).data, status=status.HTTP_200_OK)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

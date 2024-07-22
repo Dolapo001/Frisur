@@ -67,7 +67,7 @@ class Appointment(models.Model):
         appointment_end_time = appointment_start_time + timedelta(minutes=duration)
         self.end_time = appointment_end_time.time()
 
-        self.datetime = timezone.make_aware(datetime.combine(self.date, self.time))
+        self.datetime = timezone.make_aware(datetime.combine(self.date, self.time), timezone.get_current_timezone())
 
         # Check for overlapping appointments
         overlapping_appointments = Appointment.objects.filter(
