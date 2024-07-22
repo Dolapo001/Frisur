@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 import environ
+from celery.schedules import crontab
 from dotenv import load_dotenv
 import os
 from pathlib import Path
@@ -55,6 +56,8 @@ THIRD_PARTY_APPS = [
     'rest_framework_simplejwt',
     'corsheaders',
     'mailer',
+    'django_celery_beat',
+    'celery',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + THIRD_PARTY_APPS
@@ -196,6 +199,7 @@ SESSION_COOKIE_HTTPONLY = True
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
+#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 
 CELERY_BROKER_URL = 'redis://localhost:6379/0'
@@ -204,3 +208,11 @@ CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'Africa/Lagos'
+
+
+CELERY_BEAT_SCHEDULE = {
+    'send_reminder_emails_every_hour': {
+        'task': 'appointment.tasks.send_reminder_email_task',
+        'schedule': crontab(minute='0', hour='*'),
+    },
+}

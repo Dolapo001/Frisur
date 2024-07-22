@@ -74,8 +74,13 @@ def send_reminder_email(request, appointment):
     sender = settings.DEFAULT_FROM_EMAIL
     recipient = [appointment.customer_email]
 
-    reschedule_url = request.build_absolute_uri(reverse('reschedule-appointment', args=[appointment.ticket_number]))
-    cancel_url = request.build_absolute_uri(reverse('cancel-appointment', args=[appointment.ticket_number]))
+    # Determine URL
+    if request is None:
+        reschedule_url = reverse('reschedule-appointment', args=[appointment.ticket_number])
+        cancel_url = reverse('cancel-appointment', args=[appointment.ticket_number])
+    else:
+        reschedule_url = request.build_absolute_uri(reverse('reschedule-appointment', args=[appointment.ticket_number]))
+        cancel_url = request.build_absolute_uri(reverse('cancel-appointment', args=[appointment.ticket_number]))
 
     context = {
         'customer_firstname': appointment.customer_firstname,

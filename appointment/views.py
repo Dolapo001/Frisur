@@ -1,3 +1,5 @@
+from django.utils import timezone
+from datetime import datetime
 from django.db import transaction, IntegrityError
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -29,9 +31,13 @@ class ScheduleAppointmentView(APIView):
             if serializer.is_valid():
                 try:
                     appointment = serializer.save()
+                    appointment_datetime = timezone.make_aware(datetime.combine(appointment.date, appointment.time))
+                    appointment.datetime = appointment_datetime
+                    appointment.save()
                     send_confirmation_email(request, appointment)
                     reminder_time = appointment.datetime - timedelta(hours=1)
                     send_reminder_email_task.apply_async((appointment.ticket_number,), eta=reminder_time)
+
                     confirm_serializer = ConfirmAppointmentSerializer(appointment)
                     return Response(confirm_serializer.data, status=status.HTTP_201_CREATED)
                 except IntegrityError:
@@ -94,12 +100,15 @@ class RescheduleAppointmentView(APIView):
                                 status=status.HTTP_400_BAD_REQUEST)
 
             appointment.status = 'rescheduled'
+
+            # Make appointment datetime timezone-aware
+            appointment_datetime = timezone.make_aware(datetime.combine(appointment.date, appointment.time))
+            appointment.datetime = appointment_datetime
             appointment.save()
 
             send_status_update_email(request, appointment, 'rescheduled', new_date, new_time, new_end_time, new_stylist)
             reminder_time = appointment.datetime - timedelta(hours=1)
             send_reminder_email_task.apply_async((appointment.ticket_number,), eta=reminder_time)
-
             return Response(ConfirmAppointmentSerializer(appointment).data, status=status.HTTP_200_OK)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

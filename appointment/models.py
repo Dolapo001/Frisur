@@ -38,6 +38,7 @@ class Appointment(models.Model):
     feedback = models.TextField(null=True, blank=True)
     special_request = models.TextField(null=True, blank=True)
     end_time = models.TimeField(null=True)
+    datetime = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         unique_together = ('date', 'time', 'stylist')
@@ -48,10 +49,6 @@ class Appointment(models.Model):
             return f"{self.customer_firstname} {self.customer_lastname}"
         else:
             return self.customer_firstname
-
-    @property
-    def datetime(self):
-        return timezone.make_aware(datetime.combine(self.date, self.time))
 
     def save(self, *args, **kwargs):
         if not self.ticket_number:
@@ -69,6 +66,8 @@ class Appointment(models.Model):
         appointment_start_time = datetime.combine(self.date, start_time)
         appointment_end_time = appointment_start_time + timedelta(minutes=duration)
         self.end_time = appointment_end_time.time()
+
+        self.datetime = timezone.make_aware(datetime.combine(self.date, self.time))
 
         # Check for overlapping appointments
         overlapping_appointments = Appointment.objects.filter(
