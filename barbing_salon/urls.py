@@ -29,6 +29,7 @@ urlpatterns = [
     path("", SpectacularSwaggerView.as_view(url_name="schema"), name="swagger-ui"),
     path('api/schema/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
     path("api/v1/", include(urlpatterns_v1)),
+    path('i18n/', include('django.conf.urls.i18n')),
 ]
 
 REST_FRAMEWORK = {

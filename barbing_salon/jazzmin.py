@@ -1,12 +1,12 @@
 JAZZMIN_SETTINGS = {
     # title of the window (Will default to current_admin_site.site_title if absent or None)
-    "site_title": "Digital_Salon Admin",
+    "site_title": "Firsur Admin",
 
     # Title on the login screen (19 chars max) (defaults to current_admin_site.site_header if absent or None)
-    "site_header": "Digital Salon",
+    "site_header": "Firsur",
 
     # Title on the brand (19 chars max) (defaults to current_admin_site.site_header if absent or None)
-    "site_brand": "Digital_Salon",
+    "site_brand": "Firsur",
 
     # Logo to use for your site, must be present in static files, used for brand on top left
     "site_logo": "books/img/logo.png",
@@ -24,10 +24,10 @@ JAZZMIN_SETTINGS = {
     "site_icon": None,
 
     # Welcome text on the login screen
-    "welcome_sign": "Welcome to the Digital Salon",
+    "welcome_sign": "Welcome to the Firsur",
 
     # Copyright on the footer
-    "copyright": "Digital Salon",
+    "copyright": "Firsur Barbing Salon",
 
     # List of model admins to search from the search bar, search bar omitted if excluded
     # If you want to use a single search field you dont need to use a list, you can use a simple string
@@ -135,4 +135,6 @@ JAZZMIN_SETTINGS = {
     "changeform_format": "horizontal_tabs",
     # override change forms on a per modeladmin basis
     "changeform_format_overrides": {"auth.user": "collapsible", "auth.group": "vertical_tabs"},
+    # Add a language dropdown into the admin
+    "language_chooser": True,
 }

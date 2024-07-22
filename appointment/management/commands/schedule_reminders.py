@@ -10,7 +10,9 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
         now = timezone.now()
-        appointments = Appointment.objects.filter(datetime__gt=now + timedelta(hours=1))
+        # Filter for appointments within the next 1 hour
+        future_threshold = now + timedelta(hours=1)
+        appointments = Appointment.objects.filter(datetime__range=(now, future_threshold))
 
         for appointment in appointments:
             schedule_reminder_email(appointment)

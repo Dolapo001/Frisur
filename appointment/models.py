@@ -1,3 +1,5 @@
+import uuid
+
 from django.db import models, IntegrityError
 from datetime import datetime, timedelta
 import random
@@ -25,7 +27,8 @@ STATUS_CHOICES = (
 
 
 class Appointment(models.Model):
-    ticket_number = models.CharField(max_length=4, unique=True, primary_key=True, editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    ticket_number = models.CharField(max_length=4, unique=True, editable=False)
     date = models.DateField()
     time = models.TimeField()
     stylist = models.CharField(max_length=20, choices=STYLIST_CHOICES)
@@ -50,26 +53,24 @@ class Appointment(models.Model):
         else:
             return self.customer_firstname
 
-    def save(self, *args, **kwargs):
-        if not self.ticket_number:
-            letters = ''.join(random.choices('ABCDEFGHIJKLMNOPQRSTUVWXYZ', k=2))
-            numbers = ''.join(random.choices('0123456789', k=2))
-            self.ticket_number = f"{letters}{numbers}"
+    def generate_ticket_number(self):
+        letters = ''.join(random.choices('ABCDEFGHIJKLMNOPQRSTUVWXYZ', k=2))
+        numbers = ''.join(random.choices('0123456789', k=2))
+        return f"{letters}{numbers}"
 
+    def determine_stylist(self):
         if self.stylist == 'random':
             stylists = [choice[0] for choice in STYLIST_CHOICES if choice[0] != 'random']
             self.stylist = random.choice(stylists) if stylists else None
 
-        # Fixed duration of 30 minutes
+    def set_end_time(self):
         duration = 30
         start_time = self.time
         appointment_start_time = datetime.combine(self.date, start_time)
         appointment_end_time = appointment_start_time + timedelta(minutes=duration)
         self.end_time = appointment_end_time.time()
 
-        self.datetime = timezone.make_aware(datetime.combine(self.date, self.time), timezone.get_current_timezone())
-
-        # Check for overlapping appointments
+    def check_overlapping_appointments(self):
         overlapping_appointments = Appointment.objects.filter(
             date=self.date,
             stylist=self.stylist,
@@ -82,5 +83,14 @@ class Appointment(models.Model):
                 f"An appointment with {self.stylist} between {self.time} and {self.end_time} on {self.date} "
                 f"has already been scheduled."
             )
+
+    def save(self, *args, **kwargs):
+        if not self.ticket_number:
+            self.ticket_number = self.generate_ticket_number()
+
+        self.determine_stylist()
+        self.set_end_time()
+        self.datetime = timezone.make_aware(datetime.combine(self.date, self.time), timezone.get_current_timezone())
+        self.check_overlapping_appointments()
 
         super().save(*args, **kwargs)
