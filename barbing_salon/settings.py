@@ -138,14 +138,13 @@ WSGI_APPLICATION = 'barbing_salon.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'barbing_salon',
-        'USER': 'barbing_salon_user',
-        'PASSWORD': '4MkMVnf5uYhYgYQAXuihJ8PxlT8aWX60',
-        'HOST': 'dpg-cqfcu6d6l47c73bca4k0-a.frankfurt-postgres.render.com',
-        'PORT': '5432',
+        'NAME': os.getenv('DATABASE_NAME'),
+        'USER': os.getenv('DATABASE_USER'),
+        'PASSWORD': os.getenv('DATABASE_PASSWORD'),
+        'HOST': os.getenv('DATABASE_HOST'),
+        'PORT': os.getenv('DATABASE_PORT'),
     }
 }
-
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 
