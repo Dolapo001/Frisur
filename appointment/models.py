@@ -27,7 +27,7 @@ STATUS_CHOICES = (
 
 
 class Appointment(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.AutoField(primary_key=True)
     ticket_number = models.CharField(max_length=4, unique=True, editable=False)
     date = models.DateField()
     time = models.TimeField()
@@ -45,6 +45,7 @@ class Appointment(models.Model):
 
     class Meta:
         unique_together = ('date', 'time', 'stylist')
+        db_table = 'appointment_appointment'
 
     @property
     def customer_name(self):
@@ -75,7 +76,7 @@ class Appointment(models.Model):
             date=self.date,
             stylist=self.stylist,
             time__lt=self.end_time,
-            time__gte=self.time
+            end_time__gt=self.time
         ).exclude(pk=self.pk)  # Exclude current instance if updating
 
         if overlapping_appointments.exists():

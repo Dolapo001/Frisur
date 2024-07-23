@@ -14,6 +14,7 @@ from celery.schedules import crontab
 from dotenv import load_dotenv
 import os
 from pathlib import Path
+import dj_database_url
 
 from .jazzmin import JAZZMIN_SETTINGS
 
@@ -76,6 +77,7 @@ REST_FRAMEWORK = {
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -88,8 +90,7 @@ MIDDLEWARE = [
 SPECTACULAR_SETTINGS = {
     "TITLE": "Digital Salon API",
     "DESCRIPTION": """
-    🚀 Digital Salon: Digitize salon operation for increase productivity and enhanced customer
-satisfaction
+    🚀 Digital Salon: Digitize salon operation for increase productivity and enhanced customer satisfaction
     """,
     "VERSION": "1.0.0",
     #"CONTACT": "ayflix0@gmail.com",
@@ -124,13 +125,24 @@ WSGI_APPLICATION = 'barbing_salon.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+#DATABASES = {
+    #'default': {
+     #   'ENGINE': 'django.db.backends.sqlite3',
+      #  'NAME': BASE_DIR / 'db.sqlite3',
+   #     'OPTION': {
+    #        'timeout': 30,
+  #      }
+ #   }
+#}
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-        'OPTION': {
-            'timeout': 30,
-        }
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'barbing_salon',
+        'USER': 'barbing_salon_user',
+        'PASSWORD': '4MkMVnf5uYhYgYQAXuihJ8PxlT8aWX60',
+        'HOST': 'dpg-cqfcu6d6l47c73bca4k0-a.frankfurt-postgres.render.com',
+        'PORT': '5432',
     }
 }
 
