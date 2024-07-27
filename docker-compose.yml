@@ -38,6 +38,8 @@ services:
 
   redis:
     image: redis:6
+    environment:
+      - REDIS_URL=${REDIS_URL}
 
   # create_superuser:
   #   build:
