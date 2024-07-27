@@ -2,7 +2,7 @@ services:
   django:
     build: .
     container_name: barbing_salon_default
-    command: gunicorn --bind 0.0.0.0:$PORT barbing_salon.wsgi:application
+    command: gunicorn --bind 0.0.0.0:8000 barbing_salon.wsgi:application
     volumes:
       - .:/usr/src/app/
     ports:
