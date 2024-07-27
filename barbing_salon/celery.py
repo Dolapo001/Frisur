@@ -24,6 +24,7 @@ app.conf.update(
         'visibility_timeout': 3600,  # Adjust as needed
         'socket_timeout': 30,  # Adjust as needed
     },
+    worker_heartbeat=30,  # Adjust the heartbeat interval as needed
 )
 
 # Load task modules from all registered Django app configs.
