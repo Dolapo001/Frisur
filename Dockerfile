@@ -1,21 +1,26 @@
-# Dockerfile
+# Use the official Python image as the base image
 FROM python:3.12
 
 # Set the working directory
 WORKDIR /usr/src/app
 
-# Create a non-root user and group
-RUN groupadd -r mygroup && useradd -r -g mygroup myuser
-
 # Copy application code
 COPY . .
-EXPOSE 8000
 
 # Install dependencies
 RUN pip install -r requirements.txt
 
-# Switch to the non-root user
+# Create a group and user
+RUN groupadd -r mygroup && useradd -r -g mygroup myuser
+
+# Change ownership of the application files to the non-root user
+RUN chown -R myuser:mygroup /usr/src/app
+
+# Switch to non-root user
 USER myuser
 
-# Command to run Celery worker
-CMD ["celery", "-A", "barbing_salon", "worker", "--loglevel=info"]
+# Expose the port that the Django application will run on
+EXPOSE 8000
+
+# Default command to run Gunicorn for Django
+CMD ["gunicorn", "--bind", "0.0.0.0:$PORT", "barbing_salon.wsgi:application"]
