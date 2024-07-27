@@ -32,7 +32,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 
 DEBUG = os.getenv('DEBUG') == 'True'
-ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', 'localhost 127.0.0.1 [::1]').split()
+ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', '').split(',')
+
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # Application definition
@@ -230,12 +231,14 @@ CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'Africa/Lagos'
 CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
 
+# SSL Configuration for Broker
 CELERY_BROKER_USE_SSL = {
-    'ssl_cert_reqs': ssl.CERT_REQUIRED if os.getenv('CELERY_BROKER_USE_SSL_CERT_REQS') == 'required' else ssl.CERT_NONE,
+    'ssl_cert_reqs': ssl.CERT_REQUIRED
 }
 
+# SSL Configuration for Result Backend
 CELERY_RESULT_BACKEND_USE_SSL = {
-    'ssl_cert_reqs': ssl.CERT_REQUIRED if os.getenv('CELERY_RESULT_BACKEND_USE_SSL_CERT_REQS') == 'required' else ssl.CERT_NONE,
+    'ssl_cert_reqs': ssl.CERT_REQUIRED
 }
 
 CELERY_BEAT_SCHEDULE = {

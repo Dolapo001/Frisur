@@ -1,5 +1,3 @@
-version: '3'
-
 services:
     django:
         build: .
@@ -29,13 +27,13 @@ services:
         environment:
             - DEBUG=${DEBUG}
             - DJANGO_ALLOWED_HOSTS=${DJANGO_ALLOWED_HOSTS}
-            - RENDER=${RENDER}
+            - RENDER=${RENDER_URL}
             - CELERY_BROKER=${CELERY_BROKER}
             - CELERY_BACKEND=${CELERY_BACKEND}
         depends_on:
             - django
             - redis
-        user: "1000:1000" # Replace with a non-root user ID and group ID
+        user: "1000:1000" # Ensure this user exists in your Docker image
 
     pgdb:
         image: postgres
