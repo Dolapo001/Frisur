@@ -39,16 +39,16 @@ services:
   redis:
     image: redis:6
 
-  create_superuser:
-    build:
-      context: .
-      dockerfile: Dockerfile  # Ensure you have a Dockerfile for this service
-    command: sh -c "python manage.py migrate && python manage.py createsuperuser --no-input"
-    depends_on:
-      - db
-      - redis
-    env_file:
-      - .env
+  # create_superuser:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   command: sh -c "python manage.py migrate && python manage.py createsuperuser --no-input"
+  #   depends_on:
+  #     - db
+  #     - redis
+  #   env_file:
+  #     - .env
 
 volumes:
   postgres_data:
