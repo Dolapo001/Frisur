@@ -20,7 +20,7 @@ RUN chown -R myuser:mygroup /usr/src/app
 USER myuser
 
 # Expose the port that the Django application will run on
-EXPOSE 8000
+EXPOSE 10000
 
 # Default command to run Gunicorn for Django
 CMD ["gunicorn", "--bind", "0.0.0.0:$PORT", "barbing_salon.wsgi:application"]
