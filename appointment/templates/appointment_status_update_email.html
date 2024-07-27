@@ -53,6 +53,8 @@
             <li><strong>Service Type:</strong> {{ service }}</li>
             <li><strong>Ticket Number:</strong> {{ ticket_number }}</li>
         </ul>
+        {% else %}
+        <p>No new appointment details available.</p>
         {% endif %}
         <p>If you have any questions, feel free to contact us.</p>
     </div>
