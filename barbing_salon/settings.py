@@ -220,9 +220,8 @@ AUTHENTICATION_BACKENDS = [
 ]
 #EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-
-CELERY_BROKER_URL = os.getenv('REDIS_URL')
-CELERY_RESULT_BACKEND = os.getenv('REDIS_URL')
+CELERY_BROKER_URL = os.environ.get("CELERY_BROKER", "rediss://red-cqibloogph6c738mkc1g:HSKcswMYtNn5ZGHdR4wBY6OzmFvhV0qB@frankfurt-redis.render.com:6379/0")
+CELERY_RESULT_BACKEND = os.environ.get("CELERY_BACKEND", "rediss://red-cqibloogph6c738mkc1g:HSKcswMYtNn5ZGHdR4wBY6OzmFvhV0qB@frankfurt-redis.render.com:6379/0")
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
@@ -230,11 +229,11 @@ CELERY_TIMEZONE = 'Africa/Lagos'
 CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
 
 CELERY_BROKER_USE_SSL = {
-    'ssl_cert_reqs': ssl.CERT_REQUIRED  # or ssl.CERT_NONE, ssl.CERT_OPTIONAL based on your needs
+    'ssl_cert_reqs': ssl.CERT_REQUIRED  # or ssl.CERT_OPTIONAL, ssl.CERT_NONE based on your needs
 }
 
 CELERY_RESULT_BACKEND_USE_SSL = {
-    'ssl_cert_reqs': ssl.CERT_REQUIRED  # or ssl.CERT_NONE, ssl.CERT_OPTIONAL based on your needs
+    'ssl_cert_reqs': ssl.CERT_REQUIRED  # or ssl.CERT_OPTIONAL, ssl.CERT_NONE based on your needs
 }
 
 CELERY_BEAT_SCHEDULE = {

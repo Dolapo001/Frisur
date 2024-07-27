@@ -1,11 +1,9 @@
 # Dockerfile-celery
 FROM python:3.12
 
-# Create a non-root user with UID 1001
-RUN groupadd -g 1001 mygroup && useradd -m -u 1001 -g mygroup myuser
 
 # Set the working directory
-WORKDIR /app
+WORKDIR /usr/src/app
 
 # Copy application code
 COPY . .

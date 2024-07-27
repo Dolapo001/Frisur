@@ -1,58 +1,49 @@
-version: '3.8'
-
 services:
-  web:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    command: gunicorn barbing_salon.wsgi:application --bind 0.0.0.0:8000
-    volumes:
-      - .:/app
-    ports:
-      - "8000:8000"
-    depends_on:
-      - db
-      - redis
-    env_file:
-      - .env
+    django:
+        build: .
+        container_name: barbing_salon_default
+        command: python manage.py runserver 0.0.0.0:8000
+        volumes:
+            - .:/usr/src/app/
+        ports:
+            - "8000:8000"
+        environment:
+            - DEBUG=${DEBUG}
+            - DJANGO_ALLOWED_HOSTS=${DJANGO_ALLOWED_HOSTS}
+            - CELERY_BROKER=${CELERY_BROKER}
+            - CELERY_BACKEND=${CELERY_BACKEND}
+        depends_on:
+            - pgdb
+            - redis
 
-  celery_worker:
-    build:
-      context: .
-      dockerfile: Dockerfile-celery
-    command: celery -A barbing_salon worker --loglevel=info
-    volumes:
-      - .:/app
-    depends_on:
-      - db
-      - redis
-    env_file:
-      - .env
-    user: "1001:1001"
-  db:
-    image: postgres:13
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_DB=${DATABASE_NAME}
-      - POSTGRES_USER=${DATABASE_USER}
-      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+    celery:
+        build: .
+        command: celery -A barbing_salon.celery worker -l INFO
+        volumes:
+            - .:/usr/src/app
+        environment:
+            - DEBUG=${DEBUG}
+            - DJANGO_ALLOWED_HOSTS=${DJANGO_ALLOWED_HOSTS}
+            - RENDER=${RENDER}
+            - CELERY_BROKER=${CELERY_BROKER}
+            - CELERY_BACKEND=${CELERY_BACKEND}
+        depends_on:
+            - django
+            - redis
+        user: "1000:1000" # Replace with a non-root user ID and group ID
 
-  redis:
-    image: redis:6
-    environment:
-      - REDIS_URL=${REDIS_URL}
+    pgdb:
+        image: postgres
+        container_name: pgdb
+        environment:
+            - POSTGRES_DB=${DATABASE_NAME}
+            - POSTGRES_USER=${DATABASE_USER}
+            - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+        volumes:
+            - pgdata:/var/lib/postgresql/data/
 
-  # create_superuser:
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile
-  #   command: sh -c "python manage.py migrate && python manage.py createsuperuser --no-input"
-  #   depends_on:
-  #     - db
-  #     - redis
-  #   env_file:
-  #     - .env
+    redis:
+        image: "redis:alpine"
 
 volumes:
-  postgres_data:
+    pgdata:
