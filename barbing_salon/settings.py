@@ -241,12 +241,7 @@ CELERY_RESULT_BACKEND_USE_SSL = {
     'ssl_cert_reqs': ssl.CERT_REQUIRED
 }
 
-CELERY_BEAT_SCHEDULE = {
-    'send_reminder_emails_every_hour': {
-        'task': 'appointment.tasks.send_reminder_email_task',
-        'schedule': crontab(minute='0', hour='*'),
-    },
-}
+
 
 JAZZMIN_SETTINGS["show_ui_builder"] = True
 
