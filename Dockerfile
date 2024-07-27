@@ -1,16 +1,20 @@
 # Dockerfile
 FROM python:3.12
 
-# Set work directory
+# Create a user with a specific UID and GID
+RUN groupadd -g 1001 mygroup && useradd -m -u 1001 -g mygroup myuser
+
+# Set the working directory
 WORKDIR /app
 
+# Copy application code
+COPY . .
+
 # Install dependencies
-COPY requirements.txt /app/
-RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
-# Copy project
-COPY . /app/
+# Switch to non-root user
+USER myuser
 
-# Run the application
-CMD ["gunicorn", "barbing_salon.wsgi:application", "--bind", "0.0.0.0:8000"]
+# Entry point for your application
+ENTRYPOINT ["gunicorn", "myapp.wsgi:application"]

@@ -1,17 +1,20 @@
 # Dockerfile-celery
 FROM python:3.12
 
-# Create a non-root user
-RUN useradd -ms /bin/bash celeryuser
-USER celeryuser
-
-# Install dependencies
-COPY requirements.txt .
-RUN pip install -r requirements.txt
+# Create a non-root user with UID 1001
+RUN groupadd -g 1001 mygroup && useradd -m -u 1001 -g mygroup myuser
 
 # Set the working directory
 WORKDIR /app
-COPY . /app
 
-# Run Celery
+# Copy application code
+COPY . .
+
+# Install dependencies
+RUN pip install -r requirements.txt
+
+# Switch to non-root user
+USER myuser
+
+# Command to run Celery worker
 CMD ["celery", "-A", "barbing_salon", "worker", "--loglevel=info"]

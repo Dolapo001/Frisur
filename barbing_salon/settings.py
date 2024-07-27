@@ -9,6 +9,8 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
+import ssl
+
 import environ
 from celery.schedules import crontab
 from dotenv import load_dotenv
@@ -219,12 +221,21 @@ AUTHENTICATION_BACKENDS = [
 #EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 
-CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL')
-CELERY_RESULT_BACKEND = os.getenv('CELERY_RESULT_BACKEND')
+CELERY_BROKER_URL = os.getenv('REDIS_URL')
+CELERY_RESULT_BACKEND = os.getenv('REDIS_URL')
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'Africa/Lagos'
+CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
+
+CELERY_BROKER_USE_SSL = {
+    'ssl_cert_reqs': ssl.CERT_REQUIRED  # or ssl.CERT_NONE, ssl.CERT_OPTIONAL based on your needs
+}
+
+CELERY_RESULT_BACKEND_USE_SSL = {
+    'ssl_cert_reqs': ssl.CERT_REQUIRED  # or ssl.CERT_NONE, ssl.CERT_OPTIONAL based on your needs
+}
 
 CELERY_BEAT_SCHEDULE = {
     'send_reminder_emails_every_hour': {
