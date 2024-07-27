@@ -9,6 +9,7 @@ RUN groupadd -r mygroup && useradd -r -g mygroup myuser
 
 # Copy application code
 COPY . .
+EXPOSE 8000
 
 # Install dependencies
 RUN pip install -r requirements.txt
