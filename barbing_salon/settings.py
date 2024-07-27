@@ -31,11 +31,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 
+DEBUG = os.getenv('DEBUG') == 'True'
+ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', 'localhost 127.0.0.1 [::1]').split()
 SECRET_KEY = os.getenv('SECRET_KEY')
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -220,8 +218,12 @@ AUTHENTICATION_BACKENDS = [
 ]
 #EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-CELERY_BROKER_URL = os.environ.get("CELERY_BROKER", "rediss://red-cqibloogph6c738mkc1g:HSKcswMYtNn5ZGHdR4wBY6OzmFvhV0qB@frankfurt-redis.render.com:6379/0")
-CELERY_RESULT_BACKEND = os.environ.get("CELERY_BACKEND", "rediss://red-cqibloogph6c738mkc1g:HSKcswMYtNn5ZGHdR4wBY6OzmFvhV0qB@frankfurt-redis.render.com:6379/0")
+# Render URL
+RENDER_URL = os.getenv('RENDER_URL')
+
+# Celery Settings
+CELERY_BROKER_URL = os.getenv('CELERY_BROKER')
+CELERY_RESULT_BACKEND = os.getenv('CELERY_BACKEND')
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
@@ -229,11 +231,11 @@ CELERY_TIMEZONE = 'Africa/Lagos'
 CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
 
 CELERY_BROKER_USE_SSL = {
-    'ssl_cert_reqs': ssl.CERT_REQUIRED  # or ssl.CERT_OPTIONAL, ssl.CERT_NONE based on your needs
+    'ssl_cert_reqs': ssl.CERT_REQUIRED if os.getenv('CELERY_BROKER_USE_SSL_CERT_REQS') == 'required' else ssl.CERT_NONE,
 }
 
 CELERY_RESULT_BACKEND_USE_SSL = {
-    'ssl_cert_reqs': ssl.CERT_REQUIRED  # or ssl.CERT_OPTIONAL, ssl.CERT_NONE based on your needs
+    'ssl_cert_reqs': ssl.CERT_REQUIRED if os.getenv('CELERY_RESULT_BACKEND_USE_SSL_CERT_REQS') == 'required' else ssl.CERT_NONE,
 }
 
 CELERY_BEAT_SCHEDULE = {
