@@ -226,7 +226,6 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'Africa/Lagos'
 
-
 CELERY_BEAT_SCHEDULE = {
     'send_reminder_emails_every_hour': {
         'task': 'appointment.tasks.send_reminder_email_task',
