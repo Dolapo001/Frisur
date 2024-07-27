@@ -72,18 +72,16 @@ class Appointment(models.Model):
         self.end_time = appointment_end_time.time()
 
     def check_overlapping_appointments(self):
-        overlapping_appointments = Appointment.objects.filter(
-            date=self.date,
-            stylist=self.stylist,
-            time__lt=self.end_time,
-            end_time__gt=self.time
-        ).exclude(pk=self.pk)  # Exclude current instance if updating
-
-        if overlapping_appointments.exists():
-            raise IntegrityError(
-                f"An appointment with {self.stylist} between {self.time} and {self.end_time} on {self.date} "
-                f"has already been scheduled."
+        if not self.pk:
+            overlapping_appointments = Appointment.objects.filter(
+                date=self.date,
+                time=self.time,
+                stylist=self.stylist
             )
+            if overlapping_appointments.exists():
+                raise IntegrityError(
+                    f"An appointment with {self.stylist} at {self.time} on {self.date} already exists."
+                )
 
     def save(self, *args, **kwargs):
         if not self.ticket_number:
