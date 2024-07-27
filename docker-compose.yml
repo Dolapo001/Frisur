@@ -15,7 +15,7 @@ services:
       - DJANGO_SUPERUSER_USERNAME=${DJANGO_SUPERUSER_USERNAME}
       - DJANGO_SUPERUSER_EMAIL=${DJANGO_SUPERUSER_EMAIL}
       - DJANGO_SUPERUSER_PASSWORD=${DJANGO_SUPERUSER_PASSWORD}
-      - PORT  # Ensure PORT environment variable is set
+      #- PORT  # Ensure PORT environment variable is set
     depends_on:
       - pgdb
       - redis
