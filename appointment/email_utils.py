@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 def get_absolute_url(request, view_name, *args):
     base_url = request.build_absolute_uri('/')
     relative_url = reverse(view_name, args=args)
-    return base_url + relative_url
+    return base_url.rstrip('/') + '/' + relative_url.lstrip('/')
 
 
 def send_confirmation_email(request, appointment):
