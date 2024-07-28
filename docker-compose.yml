@@ -2,11 +2,9 @@ services:
   django:
     build: .
     container_name: barbing_salon_default
-    command: gunicorn --bind 0.0.0.0:${PORT} barbing_salon.wsgi:application
+    command: gunicorn --bind 0.0.0.0:8000 barbing_salon.wsgi:application
     volumes:
       - .:/usr/src/app/
-    ports:
-      - "${PORT}:${PORT}"
     environment:
       - DEBUG=${DEBUG}
       - DJANGO_ALLOWED_HOSTS=${DJANGO_ALLOWED_HOSTS}
@@ -15,7 +13,6 @@ services:
       - DJANGO_SUPERUSER_USERNAME=${DJANGO_SUPERUSER_USERNAME}
       - DJANGO_SUPERUSER_EMAIL=${DJANGO_SUPERUSER_EMAIL}
       - DJANGO_SUPERUSER_PASSWORD=${DJANGO_SUPERUSER_PASSWORD}
-      - PORT=${PORT}  # Ensure PORT environment variable is set here
     depends_on:
       - pgdb
       - redis
