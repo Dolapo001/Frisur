@@ -21,8 +21,8 @@ app.conf.update(
         # Optionally specify CA certs if needed
     },
     broker_transport_options={
-        'visibility_timeout': 3600,  # Adjust as needed
-        'socket_timeout': 30,  # Adjust as needed
+        'visibility_timeout': 3600,
+        'socket_timeout': 30,
     },
     worker_heartbeat=30,  # Adjust the heartbeat interval as needed
 )

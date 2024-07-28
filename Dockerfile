@@ -21,4 +21,4 @@ USER myuser
 
 
 # Default command to run Gunicorn for Django
-CMD ["sh", "-c", "gunicorn --bind 0.0.0.0:8000 barbing_salon.wsgi:application"]
+CMD ["sh", "-c", "gunicorn --bind 0.0.0.0:8000 --timeout 0 barbing_salon.wsgi:application"]
