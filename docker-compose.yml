@@ -18,7 +18,7 @@ services:
     depends_on:
       - pgdb
       - redis
-
+    restart: always  # Ensure the container always restarts on failure or system restart
 
   celery:
     build: .
@@ -35,6 +35,7 @@ services:
       - django
       - redis
     user: "1000:1000"  # Ensure this user exists in your Dockerfile or create a user with the correct UID and GID
+    restart: always  # Ensure the container always restarts on failure or system restart
 
   pgdb:
     image: postgres
@@ -45,9 +46,11 @@ services:
       - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
     volumes:
       - pgdata:/var/lib/postgresql/data/
+    restart: always  # Ensure the container always restarts on failure or system restart
 
   redis:
     image: "redis:alpine"
+    restart: always  # Ensure the container always restarts on failure or system restart
 
 volumes:
   pgdata:
