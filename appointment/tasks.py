@@ -11,7 +11,7 @@ def send_reminder_email_task(ticket_number):
     logger.info(f"Received task for ticket number: {ticket_number}")
     try:
         appointment = Appointment.objects.get(ticket_number=ticket_number)
-        send_reminder_email(None, appointment)
+        send_reminder_email(appointment)
         logger.info(f"Reminder email sent for ticket number: {ticket_number}")
     except Appointment.DoesNotExist:
         logger.error(f"Appointment with ticket number {ticket_number} does not exist.")

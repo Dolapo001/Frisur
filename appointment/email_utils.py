@@ -8,9 +8,9 @@ logger = logging.getLogger(__name__)
 
 
 def get_absolute_url(view_name, *args):
-    base_url = settings.SITE_DOMAIN
+    base_url = settings.SITE_DOMAIN.rstrip('/')
     relative_url = reverse(view_name, args=args)
-    return base_url.rstrip('/') + '/' + relative_url.lstrip('/')
+    return f"{base_url}/{relative_url.lstrip('/')}"
 
 
 def send_confirmation_email(appointment):
@@ -84,6 +84,9 @@ def send_reminder_email(appointment):
     reschedule_url = get_absolute_url('reschedule-appointment', appointment.ticket_number)
     cancel_url = get_absolute_url('cancel-appointment', appointment.ticket_number)
 
+    logger.debug(f"Reschedule URL: {reschedule_url}")
+    logger.debug(f"Cancel URL: {cancel_url}")
+
     context = {
         'customer_firstname': appointment.customer_firstname,
         'stylist': appointment.stylist,
@@ -106,4 +109,6 @@ def send_reminder_email(appointment):
         logger.info(f"Email sent successfully to {recipient}")
     except Exception as e:
         logger.error(f"Failed to send email to {recipient}: {str(e)}")
+
+
 
