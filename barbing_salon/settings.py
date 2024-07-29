@@ -241,7 +241,7 @@ CELERY_RESULT_BACKEND_USE_SSL = {
     'ssl_cert_reqs': ssl.CERT_REQUIRED
 }
 
-
+SITE_DOMAIN = 'https://frisur-barbing-salon.onrender.com/'
 
 JAZZMIN_SETTINGS["show_ui_builder"] = True
 

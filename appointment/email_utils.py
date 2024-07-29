@@ -7,8 +7,8 @@ from django.urls import reverse
 logger = logging.getLogger(__name__)
 
 
-def get_absolute_url(request, view_name, *args):
-    base_url = request.build_absolute_uri('/')
+def get_absolute_url(view_name, *args):
+    base_url = settings.SITE_DOMAIN
     relative_url = reverse(view_name, args=args)
     return base_url.rstrip('/') + '/' + relative_url.lstrip('/')
 
@@ -75,14 +75,14 @@ def send_status_update_email(request, appointment, status, new_date=None, new_ti
         logger.error(f"Failed to send status update email to {recipient}: {str(e)}")
 
 
-def send_reminder_email(request, appointment):
+def send_reminder_email(appointment):
     subject = 'Appointment Reminder'
     sender = settings.DEFAULT_FROM_EMAIL
     recipient = [appointment.customer_email]
 
     # Determine URL
-    reschedule_url = get_absolute_url(request, 'reschedule-appointment', appointment.ticket_number)
-    cancel_url = get_absolute_url(request, 'cancel-appointment', appointment.ticket_number)
+    reschedule_url = get_absolute_url('reschedule-appointment', appointment.ticket_number)
+    cancel_url = get_absolute_url('cancel-appointment', appointment.ticket_number)
 
     context = {
         'customer_firstname': appointment.customer_firstname,
