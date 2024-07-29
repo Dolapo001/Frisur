@@ -13,26 +13,27 @@ def get_absolute_url(view_name, *args):
     return base_url.rstrip('/') + '/' + relative_url.lstrip('/')
 
 
-def send_confirmation_email(request, appointment):
+def send_confirmation_email(appointment):
     subject = 'Appointment Confirmation'
     sender = settings.DEFAULT_FROM_EMAIL
     recipient = [appointment.customer_email]
 
-    reschedule_url = get_absolute_url(request, 'reschedule-appointment', appointment.ticket_number)
-    cancel_url = get_absolute_url(request, 'cancel-appointment', appointment.ticket_number)
+    # Determine URL
+    reschedule_url = get_absolute_url('reschedule-appointment', appointment.ticket_number)
+    cancel_url = get_absolute_url('cancel-appointment', appointment.ticket_number)
 
     context = {
-            'customer_firstname': appointment.customer_firstname,
-            'stylist': appointment.stylist,
-            'date': appointment.date,
-            'time': appointment.time,
-            'end_time': appointment.end_time,
-            'service': appointment.service,
-            'ticket_number': appointment.ticket_number,
-            'email_sender_name': settings.EMAIL_SENDER_NAME,
-            'reschedule_url': reschedule_url,
-            'cancel_url': cancel_url,
-        }
+        'customer_firstname': appointment.customer_firstname,
+        'stylist': appointment.stylist,
+        'date': appointment.date,
+        'time': appointment.time,
+        'end_time': appointment.end_time,
+        'service': appointment.service,
+        'ticket_number': appointment.ticket_number,
+        'email_sender_name': settings.EMAIL_SENDER_NAME,
+        'reschedule_url': reschedule_url,
+        'cancel_url': cancel_url,
+    }
 
     email_html_message = render_to_string('appointment_confirmation_email.html', context)
     email_plain_message = render_to_string('confirmation_email.txt', context)
@@ -106,3 +107,4 @@ def send_reminder_email(appointment):
         logger.info(f"Email sent successfully to {recipient}")
     except Exception as e:
         logger.error(f"Failed to send email to {recipient}: {str(e)}")
+
