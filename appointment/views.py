@@ -36,7 +36,7 @@ class ScheduleAppointmentView(APIView):
                     appointment.datetime = appointment_datetime
                     appointment.save()
                     schedule_reminder_email(appointment)
-                    send_confirmation_email(request, appointment)
+                    send_confirmation_email(appointment)
 
                     confirm_serializer = ConfirmAppointmentSerializer(appointment)
                     return Response(confirm_serializer.data, status=status.HTTP_201_CREATED)

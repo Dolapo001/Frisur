@@ -18,7 +18,6 @@ def send_confirmation_email(appointment):
     sender = settings.DEFAULT_FROM_EMAIL
     recipient = [appointment.customer_email]
 
-    # Determine URL
     reschedule_url = get_absolute_url('reschedule-appointment', appointment.ticket_number)
     cancel_url = get_absolute_url('cancel-appointment', appointment.ticket_number)
 
