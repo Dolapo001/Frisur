@@ -62,7 +62,7 @@ class RescheduleAppointmentView(APIView):
                              description="Ticket number of the appointment to reschedule")
         ],
         responses={
-            201: OpenApiResponse(response=ConfirmAppointmentSerializer),
+            200: OpenApiResponse(response=ConfirmAppointmentSerializer),
             400: OpenApiResponse(description="This time slot is already booked for the selected stylist."),
             404: OpenApiResponse(description="Appointment not found."),
             500: OpenApiResponse(description="Internal Server Error.")
@@ -124,7 +124,7 @@ class CancelAppointmentView(APIView):
                              description="Ticket number of the appointment to cancel")
         ],
         responses={
-            201: OpenApiResponse(response="Cancelled."),
+            204: OpenApiResponse(description="No Content"),
             404: OpenApiResponse(description="Appointment not found."),
             500: OpenApiResponse(description="Internal Server Error.")
         },
@@ -141,7 +141,7 @@ class CancelAppointmentView(APIView):
 
         send_status_update_email(request, appointment, status='cancelled')
 
-        return Response({"message": "Appointment cancelled"}, status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class ConfirmAppointmentView(APIView):
@@ -154,8 +154,8 @@ class ConfirmAppointmentView(APIView):
                              description="Ticket number of the appointment for confirmation")
         ],
         responses={
-            200: OpenApiResponse(response="OK."),
-            400: OpenApiResponse(response="Cannot get details of a cancelled appointment."),
+            200: OpenApiResponse(response=ConfirmAppointmentSerializer),
+            400: OpenApiResponse(response={"error": "Cannot get details of a cancelled appointment."}),
             404: OpenApiResponse(description="Appointment not found."),
             500: OpenApiResponse(description="Internal Server Error.")
         },
