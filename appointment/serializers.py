@@ -8,7 +8,7 @@ class ScheduleAppointmentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Appointment
-        fields = ['date', 'time', 'end_time', 'stylist', 'service', 'customer_firstname', 'customer_lastname',
+        fields = ['date', 'time', 'stylist', 'service', 'customer_firstname', 'customer_lastname',
                   'customer_email',
                   'customer_phone', 'special_request']
 
