@@ -244,7 +244,8 @@ CELERY_RESULT_BACKEND_USE_SSL = {
 SITE_DOMAIN = 'https://frisur-barbing-salon.onrender.com/'
 
 
-CORS_ALLOWED_ORIGINS = True
+CORS_ALLOW_ALL_ORIGINS = True
+
 
 CORS_ALLOW_METHODS = (
     "DELETE",
