@@ -243,6 +243,18 @@ CELERY_RESULT_BACKEND_USE_SSL = {
 
 SITE_DOMAIN = 'https://frisur-barbing-salon.onrender.com/'
 
+
+CORS_ALLOWED_ORIGINS = True
+
+CORS_ALLOW_METHODS = (
+    "DELETE",
+    "GET",
+    "OPTIONS",
+    "PATCH",
+    "POST",
+    "PUT",
+)
+
 JAZZMIN_SETTINGS["show_ui_builder"] = True
 
 JAZZMIN_UI_TWEAKS = {
