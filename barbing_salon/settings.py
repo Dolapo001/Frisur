@@ -241,7 +241,7 @@ CELERY_RESULT_BACKEND_USE_SSL = {
     'ssl_cert_reqs': ssl.CERT_REQUIRED
 }
 
-SITE_DOMAIN = 'http://localhost:5173/'
+SITE_DOMAIN = 'http://localhost:5173'
 
 CORS_ALLOW_ALL_ORIGINS = True
 
