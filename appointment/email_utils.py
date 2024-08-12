@@ -18,8 +18,8 @@ def send_confirmation_email(appointment):
     sender = settings.DEFAULT_FROM_EMAIL
     recipient = [appointment.customer_email]
 
-    reschedule_url = get_absolute_url('reschedule-appointment', appointment.ticket_number)
-    cancel_url = get_absolute_url('cancel-appointment', appointment.ticket_number)
+    reschedule_url = f"{settings.SITE_DOMAIN}/reschedule-appointment/{appointment.ticket_number}/"
+    cancel_url = f"{settings.SITE_DOMAIN}/cancel-appointment/{appointment.ticket_number}/"
 
     context = {
         'customer_firstname': appointment.customer_firstname,
@@ -81,8 +81,8 @@ def send_reminder_email(appointment):
     recipient = [appointment.customer_email]
 
     # Determine URL
-    reschedule_url = get_absolute_url('reschedule-appointment', appointment.ticket_number)
-    cancel_url = get_absolute_url('cancel-appointment', appointment.ticket_number)
+    reschedule_url = f"{settings.SITE_DOMAIN}/reschedule-appointment/{appointment.ticket_number}/"
+    cancel_url = f"{settings.SITE_DOMAIN}/cancel-appointment/{appointment.ticket_number}/"
 
     logger.debug(f"Reschedule URL: {reschedule_url}")
     logger.debug(f"Cancel URL: {cancel_url}")
