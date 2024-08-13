@@ -247,10 +247,11 @@ CELERY_RESULT_BACKEND_USE_SSL = {
     'ssl_cert_reqs': ssl.CERT_REQUIRED
 }
 
-SITE_DOMAIN = 'http://localhost:5173'
+SITE_DOMAIN = 'https://thebarber.vercel.app/'
 
 #CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOWED_ORIGINS = [
+    'https://thebarber.vercel.app/'
     'http://localhost:5173/',
     'https://frisur-barbing-salon.onrender.com',
     'http://127.0.0.1:8000/'
@@ -278,6 +279,7 @@ CORS_ALLOW_HEADERS = (
 )
 
 CSRF_TRUSTED_ORIGINS = [
+    'https://thebarber.vercel.app/'
     'http://localhost:5173/',
     'https://frisur-barbing-salon.onrender.com',
     'http://127.0.0.1:8000/',
