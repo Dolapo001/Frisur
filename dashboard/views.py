@@ -39,9 +39,17 @@ class AppointmentListView(APIView):
 
         try:
             if stylist:
-                appointments = Appointment.objects.filter(stylist=stylist, date=today).order_by('time')
+                appointments = Appointment.objects.filter(
+                    stylist=stylist,
+                    date=today,
+                    status__in=['scheduled', 'rescheduled']  # Exclude cancelled appointments
+                ).order_by('time')
             else:
-                appointments = Appointment.objects.filter(date=today).order_by('time')
+                appointments = Appointment.objects.filter(
+                    date=today,
+                    status__in=['scheduled', 'rescheduled']  # Exclude cancelled appointments
+                ).order_by('time')
+
             serializer = self.serializer_class(appointments, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
 
