@@ -103,7 +103,7 @@ SPECTACULAR_SETTINGS = {
 ROOT_URLCONF = 'barbing_salon.urls'
 AUTH_USER_MODEL = 'dashboard.User'
 LOGOUT_REDIRECT_URL = '/login/'
-CSRF_TRUSTED_ORIGINS = ['http://localhost:8000']
+
 
 TEMPLATES = [
     {
@@ -259,6 +259,25 @@ CORS_ALLOW_METHODS = (
     "POST",
     "PUT",
 )
+CORS_ALLOW_HEADERS = (
+    'authorization',
+    'content-type',
+    'x-requested-with',
+    'accept',
+    'origin',
+    'user-agent',
+    'referer',
+    'x-csrftoken',
+    'x-frame-options',
+)
+
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:5173/',
+    'https://frisur-barbing-salon.onrender.com',
+    'http://127.0.0.1:8000/',
+]
+
+
 
 JAZZMIN_SETTINGS["show_ui_builder"] = True
 
