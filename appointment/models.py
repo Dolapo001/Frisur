@@ -10,7 +10,7 @@ STYLIST_CHOICES = (
     ('Pastor', 'Pastor'),
     ('Orebiyi', 'Orebiyi'),
     ('Femi', 'Femi'),
-    ('any', 'Any')
+    ('Any', 'Any')
 )
 
 SERVICE_TYPE_CHOICES = (
