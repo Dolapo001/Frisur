@@ -252,17 +252,17 @@ SITE_DOMAIN = 'https://frisursalon.vercel.app/'
 #CORS_ALLOW_ALL_ORIGINS = True
 
 CORS_ALLOWED_ORIGINS = [
-    'https://frisursalon.vercel.app/',
-    'http://localhost:5173/',
+    'https://frisursalon.vercel.app',
+    'http://localhost:5173',
     'https://frisur-barbing-salon.onrender.com',
-    'http://127.0.0.1:8000/',
+    'http://127.0.0.1:8000',
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://frisursalon.vercel.app/',
-    'http://localhost:5173/',
+    'https://frisursalon.vercel.app',
+    'http://localhost:5173',
     'https://frisur-barbing-salon.onrender.com',
-    'http://127.0.0.1:8000/',
+    'http://127.0.0.1:8000',
 ]
 
 

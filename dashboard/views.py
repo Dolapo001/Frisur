@@ -172,3 +172,19 @@ class LogoutView(APIView):
     def post(self, request, format=None):
         logout(request)
         return Response({'detail': 'Logout successful'}, status=status.HTTP_200_OK)
+
+
+class StylistAppointmentListView(APIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = AppointmentListSerializer
+
+    def get(self, request, *args, **kwargs):
+        stylist = request.query_params.get('stylist', None)
+        if stylist:
+            appointments = Appointment.objects.filter(stylist=stylist)
+        else:
+            appointments = Appointment.objects.all()
+
+        serializer = AppointmentListSerializer(appointments, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+

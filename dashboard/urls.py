@@ -7,4 +7,5 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(), name='logout'),
     path('appointments/', AppointmentListView.as_view(), name='appointment-list'),
     path('appointments/<str:ticket_number>/', AppointmentDetailView.as_view(), name='appointment-detail'),
+    path('stylist-appointments/', StylistAppointmentListView.as_view(), name='stylist-appointments')
 ]
