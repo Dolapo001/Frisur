@@ -10,13 +10,14 @@ STYLIST_CHOICES = (
     ('Pastor', 'Pastor'),
     ('Orebiyi', 'Orebiyi'),
     ('Femi', 'Femi'),
-    ('random', 'Random')
+    ('any', 'Any')
 )
 
 SERVICE_TYPE_CHOICES = (
     ('trimming', 'Trimming'),
     ('haircut', 'Haircut'),
     ('shaving', 'Shaving'),
+    ('home_service', 'Home Service')
 )
 
 STATUS_CHOICES = (
