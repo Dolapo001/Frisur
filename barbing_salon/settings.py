@@ -147,13 +147,14 @@ WSGI_APPLICATION = 'barbing_salon.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('DATABASE_NAME'),
-        'USER': os.getenv('DATABASE_USER'),
-        'PASSWORD': os.getenv('DATABASE_PASSWORD'),
-        'HOST': os.getenv('DATABASE_HOST'),
-        'PORT': os.getenv('DATABASE_PORT'),
+        'NAME': os.getenv('PGDATABASE'),
+        'USER': os.getenv('PGUSER'),
+        'PASSWORD': os.getenv('PGPASSWORD'),
+        'HOST': os.getenv('PGHOST'),
+        'PORT': os.getenv('PGPORT'),
     }
 }
+
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 
@@ -228,7 +229,7 @@ AUTHENTICATION_BACKENDS = [
 #EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # Render URL
-RENDER_URL = os.getenv('RENDER_URL')
+RENDER_URL = os.getenv('RAILWAY_URL')
 
 # Celery Settings
 CELERY_BROKER_URL = os.getenv('CELERY_BROKER')

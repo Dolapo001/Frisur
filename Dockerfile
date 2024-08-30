@@ -8,7 +8,8 @@ WORKDIR /usr/src/app
 COPY . .
 
 # Install dependencies
-RUN pip install -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt \
+    && pip install --no-cache-dir cloudinary
 
 # Create a group and user
 RUN addgroup -S mygroup && adduser -S myuser -G mygroup
@@ -18,7 +19,6 @@ RUN chown -R myuser:mygroup /usr/src/app
 
 # Switch to non-root user
 USER myuser
-
 
 # Default command to run Gunicorn for Django
 CMD ["sh", "-c", "gunicorn --bind 0.0.0.0:8000 --timeout 0 barbing_salon.wsgi:application"]

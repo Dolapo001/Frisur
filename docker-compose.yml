@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   django:
     build: .
@@ -5,13 +7,14 @@ services:
     command: gunicorn --bind 0.0.0.0:8000 --timeout 0 barbing_salon.wsgi:application
     volumes:
       - .:/usr/src/app/
-    #ports:
-     # - "8000:8000"
+    ports:
+      - "8000:8000"  # Uncomment this line if you need to expose the port
     environment:
       - DEBUG=${DEBUG}
       - DJANGO_ALLOWED_HOSTS=${DJANGO_ALLOWED_HOSTS}
-      - CELERY_BROKER=${CELERY_BROKER}
-      - CELERY_BACKEND=${CELERY_BACKEND}
+      - DATABASE_URL=${DATABASE_URL}
+      - CELERY_BROKER_URL=${CELERY_BROKER_URL}
+      - CELERY_RESULT_BACKEND=${CELERY_RESULT_BACKEND}
       - DJANGO_SUPERUSER_USERNAME=${DJANGO_SUPERUSER_USERNAME}
       - DJANGO_SUPERUSER_EMAIL=${DJANGO_SUPERUSER_EMAIL}
       - DJANGO_SUPERUSER_PASSWORD=${DJANGO_SUPERUSER_PASSWORD}
@@ -21,7 +24,7 @@ services:
     depends_on:
       - pgdb
       - redis
-    restart: always  # Ensure the container always restarts on failure or system restart
+    restart: always
 
   celery:
     build: .
@@ -31,29 +34,31 @@ services:
     environment:
       - DEBUG=${DEBUG}
       - DJANGO_ALLOWED_HOSTS=${DJANGO_ALLOWED_HOSTS}
-      - RENDER=${RENDER_URL}
-      - CELERY_BROKER=${CELERY_BROKER}
-      - CELERY_BACKEND=${CELERY_BACKEND}
+      - CELERY_BROKER_URL=${CELERY_BROKER_URL}
+      - CELERY_RESULT_BACKEND=${CELERY_RESULT_BACKEND}
     depends_on:
       - django
       - redis
     user: "1000:1000"  # Ensure this user exists in your Dockerfile or create a user with the correct UID and GID
-    restart: always  # Ensure the container always restarts on failure or system restart
+    restart: always
 
   pgdb:
     image: postgres
     container_name: pgdb
     environment:
-      - POSTGRES_DB=${DATABASE_NAME}
-      - POSTGRES_USER=${DATABASE_USER}
-      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+      - POSTGRES_DB=${PGDATABASE}
+      - POSTGRES_USER=${PGUSER}
+      - POSTGRES_PASSWORD=${PGPASSWORD}
     volumes:
       - pgdata:/var/lib/postgresql/data/
-    restart: always  # Ensure the container always restarts on failure or system restart
+    restart: always
 
   redis:
     image: "redis:alpine"
-    restart: always  # Ensure the container always restarts on failure or system restart
+    container_name: redis
+    environment:
+      - REDIS_URL=${REDIS_URL}
+    restart: always
 
 volumes:
   pgdata:
