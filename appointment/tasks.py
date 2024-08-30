@@ -3,8 +3,8 @@ from .models import Appointment
 from .email_utils import send_reminder_email
 import logging
 
-logger = logging.getLogger(__name__)
 
+logger = logging.getLogger(__name__)
 
 @shared_task
 def send_reminder_email_task(ticket_number):

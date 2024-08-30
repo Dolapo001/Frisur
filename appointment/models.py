@@ -5,7 +5,7 @@ from django.db import models, IntegrityError
 from datetime import datetime, timedelta
 import random
 from django.utils import timezone
-from cloudinary.models import CloudinaryField
+#from cloudinary.models import CloudinaryField
 
 
 
@@ -46,7 +46,7 @@ class Appointment(models.Model):
     special_request = models.TextField(null=True, blank=True)
     end_time = models.TimeField(null=True)
     datetime = models.DateTimeField(null=True, blank=True)
-    style_sample = CloudinaryField('image', null=True, blank=True)
+    #style_sample = CloudinaryField('image', null=True, blank=True)
 
     class Meta:
         unique_together = ('date', 'time', 'stylist')
@@ -96,7 +96,9 @@ class Appointment(models.Model):
 
             overlapping_appointments = Appointment.objects.filter(
                 stylist=self.stylist,
-                datetime__range=(start_time, end_time)
+                date=self.date,
+                time__lt=end_time,
+                end_time__gt=start_time
             )
             if overlapping_appointments.exists():
                 raise IntegrityError(
