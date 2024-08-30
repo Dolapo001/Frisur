@@ -1,9 +1,12 @@
+import os.path
 import uuid
-
+from django.core.exceptions import ValidationError
 from django.db import models, IntegrityError
 from datetime import datetime, timedelta
 import random
 from django.utils import timezone
+from cloudinary.models import CloudinaryField
+
 
 
 STYLIST_CHOICES = (
@@ -43,6 +46,7 @@ class Appointment(models.Model):
     special_request = models.TextField(null=True, blank=True)
     end_time = models.TimeField(null=True)
     datetime = models.DateTimeField(null=True, blank=True)
+    style_sample = CloudinaryField('image', null=True, blank=True)
 
     class Meta:
         unique_together = ('date', 'time', 'stylist')
@@ -84,6 +88,28 @@ class Appointment(models.Model):
                     f"An appointment with {self.stylist} at {self.time} on {self.date} already exists."
                 )
 
+    def block_stylist_availability_for_home_service(self):
+        if self.service == 'home_service':
+            home_service_duration = timedelta(hours=3)
+            start_time = datetime.combine(self.date, self.time) - timedelta(hours=1)
+            end_time = start_time + home_service_duration
+
+            overlapping_appointments = Appointment.objects.filter(
+                stylist=self.stylist,
+                datetime__range=(start_time, end_time)
+            )
+            if overlapping_appointments.exists():
+                raise IntegrityError(
+                    f"The stylist {self.stylist} is not available for the selected time and service."
+                )
+
+    def clean(self):
+        if self.style_sample:
+            allowed_extensions = ['.jpg', '.jpeg', '.png']
+            extension = os.path.splitext(self.style_sample.name)[1].lower()
+            if extension not in allowed_extensions:
+                raise ValidationError(f"Unsupported file extension. Allowed extensions are: {", ".join(allowed_extensions)}")
+
     def save(self, *args, **kwargs):
         if not self.ticket_number:
             self.ticket_number = self.generate_ticket_number()
@@ -92,5 +118,6 @@ class Appointment(models.Model):
         self.set_end_time()
         self.datetime = timezone.make_aware(datetime.combine(self.date, self.time), timezone.get_current_timezone())
         self.check_overlapping_appointments()
-
+        self.block_stylist_availability_for_home_service()
+        self.clean()
         super().save(*args, **kwargs)
