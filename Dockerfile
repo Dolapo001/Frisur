@@ -19,11 +19,8 @@ RUN chown -R myuser:mygroup /usr/src/app
 # Switch to non-root user
 USER myuser
 
-# Install docker-compose
-RUN apt-get update && apt-get install -y docker-compose
-
 # Make the script executable
 RUN chmod +x start.sh
 
-
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--timeout", "0", "barbing_salon.wsgi:application", "./start.sh"]
+# Set the command to run Gunicorn directly
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--timeout", "0", "barbing_salon.wsgi:application"]
