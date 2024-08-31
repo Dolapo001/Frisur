@@ -236,29 +236,28 @@ AUTHENTICATION_BACKENDS = [
 # Render URL
 RAILWAY_URL = os.getenv('RAILWAY_URL')
 
-CELERY_BROKER_URL = os.getenv('CELERY_BROKER')
-CELERY_RESULT_BACKEND = os.getenv('CELERY_BACKEND')
+# settings.py
+CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL', 'redis://default:VzrDhPoYRXsLCxZGbcimrqUhKTIQfJfW@junction.proxy.rlwy.net:13724/0')
+CELERY_RESULT_BACKEND = os.getenv('CELERY_RESULT_BACKEND', 'redis://default:VzrDhPoYRXsLCxZGbcimrqUhKTIQfJfW@junction.proxy.rlwy.net:13724/0')
+
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'Africa/Lagos'
 CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
-
-# SSL Configuration for Broker
-CELERY_BROKER_USE_SSL = {
-    'ssl_cert_reqs': ssl.CERT_REQUIRED  # Use CERT_NONE if self-signed certificates cause issues
+CELERY_BROKER_USE_SSL = False
+CELERY_RESULT_BACKEND_USE_SSL = False
+CELERY_BROKER_TRANSPORT_OPTIONS = {
+    'socket_timeout': 30,
+    'retry_policy': {'timeout': 30},
 }
 
-# SSL Configuration for Result Backend
-CELERY_RESULT_BACKEND_USE_SSL = {
-    'ssl_cert_reqs': ssl.CERT_REQUIRED  # Use CERT_NONE if self-signed certificates cause issues
-}
 
 # Redis Cache Configuration
 CACHES = {
     'default': {
         'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': os.getenv('REDIS_URL'),
+        'LOCATION': os.getenv('REDIS_URL', 'redis://default:VzrDhPoYRXsLCxZGbcimrqUhKTIQfJfW@junction.proxy.rlwy.net:13724/0'),
         'OPTIONS': {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
         }
