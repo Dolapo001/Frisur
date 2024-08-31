@@ -1,23 +1,17 @@
-# Use the official Python image as the base image
-FROM python:3.11-alpine
+# Use an official Python runtime as a parent image
+FROM python:3.9-slim
 
-# Set the working directory
-WORKDIR /usr/src/app
+# Set the working directory in the container
+WORKDIR /app
 
-# Copy application code
-COPY . .
+# Copy the current directory contents into the container at /app
+COPY . /app
 
-# Install dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+# Install docker-compose
+RUN apt-get update && apt-get install -y docker-compose
 
-# Create a group and user
-RUN addgroup -S mygroup && adduser -S myuser -G mygroup
+# Make the script executable
+RUN chmod +x start.sh
 
-# Change ownership of the application files to the non-root user
-RUN chown -R myuser:mygroup /usr/src/app
-
-# Switch to non-root user
-USER myuser
-
-# Default command to run Gunicorn for Django
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--timeout", "0", "barbing_salon.wsgi:application"]
+# Run the script
+CMD ["./start.sh"]
