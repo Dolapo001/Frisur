@@ -10,7 +10,7 @@ class ScheduleAppointmentSerializer(serializers.ModelSerializer):
         model = Appointment
         fields = ['date', 'time', 'stylist', 'service', 'customer_firstname', 'customer_lastname',
                   'customer_email',
-                  'customer_phone', 'special_request']
+                  'customer_phone', 'special_request', 'style_sample']
 
     def validate(self, data):
         start_time = data.get('time')
@@ -56,7 +56,7 @@ class ConfirmAppointmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Appointment
         fields = ['ticket_number', 'date', 'time', 'end_time', 'stylist', 'service', 'customer_name',
-                  'customer_email', 'customer_phone', 'status']
+                  'customer_email', 'customer_phone', 'status', 'style_sample']
 
     def get_end_time(self, obj):
         start_datetime = datetime.combine(obj.date, obj.time)

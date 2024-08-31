@@ -34,6 +34,7 @@ class AppointmentDetailsSerializer(serializers.ModelSerializer):
             'customer_phone',
             'service',
             'special_request',
+            'style_sample'
         ]
 
 
