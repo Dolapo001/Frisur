@@ -237,8 +237,8 @@ AUTHENTICATION_BACKENDS = [
 RAILWAY_URL = os.getenv('RAILWAY_URL')
 
 # settings.py
-CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL', 'redis://default:VzrDhPoYRXsLCxZGbcimrqUhKTIQfJfW@junction.proxy.rlwy.net:13724/0')
-CELERY_RESULT_BACKEND = os.getenv('CELERY_RESULT_BACKEND', 'redis://default:VzrDhPoYRXsLCxZGbcimrqUhKTIQfJfW@junction.proxy.rlwy.net:13724/0')
+CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL')
+CELERY_RESULT_BACKEND = os.getenv('CELERY_RESULT_BACKEND')
 
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
@@ -257,7 +257,7 @@ CELERY_BROKER_TRANSPORT_OPTIONS = {
 CACHES = {
     'default': {
         'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': os.getenv('REDIS_URL', 'redis://default:VzrDhPoYRXsLCxZGbcimrqUhKTIQfJfW@junction.proxy.rlwy.net:13724/0'),
+        'LOCATION': os.getenv('REDIS_URL'),
         'OPTIONS': {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
         }
