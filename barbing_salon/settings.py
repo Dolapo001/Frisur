@@ -18,6 +18,9 @@ from dotenv import load_dotenv
 import os
 from pathlib import Path
 import dj_database_url
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
 
 from .jazzmin import JAZZMIN_SETTINGS
 
@@ -64,6 +67,9 @@ THIRD_PARTY_APPS = [
     'mailer',
     'django_celery_beat',
     'celery',
+    'django_redis',
+    'cloudinary',
+    'cloudinary_storage'
 
 ]
 
@@ -146,11 +152,11 @@ WSGI_APPLICATION = 'barbing_salon.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('PGDATABASE'),
-        'USER': os.getenv('PGUSER'),
-        'PASSWORD': os.getenv('PGPASSWORD'),
-        'HOST': os.getenv('PGHOST'),
-        'PORT': os.getenv('PGPORT'),
+        'NAME': os.environ.get('PGDATABASE'),
+        'USER': os.environ.get('PGUSER'),
+        'PASSWORD': os.environ.get('PGPASSWORD'),
+        'HOST': os.environ.get('PGHOST'),
+        'PORT': os.environ.get('PGPORT'),
     }
 }
 
@@ -228,9 +234,8 @@ AUTHENTICATION_BACKENDS = [
 #EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # Render URL
-RENDER_URL = os.getenv('RAILWAY_URL')
+RAILWAY_URL = os.getenv('RAILWAY_URL')
 
-# Celery Settings
 CELERY_BROKER_URL = os.getenv('CELERY_BROKER')
 CELERY_RESULT_BACKEND = os.getenv('CELERY_BACKEND')
 CELERY_ACCEPT_CONTENT = ['json']
@@ -241,12 +246,23 @@ CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
 
 # SSL Configuration for Broker
 CELERY_BROKER_USE_SSL = {
-    'ssl_cert_reqs': ssl.CERT_REQUIRED
+    'ssl_cert_reqs': ssl.CERT_REQUIRED  # Use CERT_NONE if self-signed certificates cause issues
 }
 
 # SSL Configuration for Result Backend
 CELERY_RESULT_BACKEND_USE_SSL = {
-    'ssl_cert_reqs': ssl.CERT_REQUIRED
+    'ssl_cert_reqs': ssl.CERT_REQUIRED  # Use CERT_NONE if self-signed certificates cause issues
+}
+
+# Redis Cache Configuration
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': os.getenv('REDIS_URL'),
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        }
+    }
 }
 
 SITE_DOMAIN = 'https://frisursalon.vercel.app/'
@@ -324,3 +340,13 @@ JAZZMIN_UI_TWEAKS = {
         "success": "btn-success"
     }
 }
+
+
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': os.getenv('CLOUDINARY_CLOUD_NAME'),
+    'API_KEY': os.getenv('CLOUDINARY_API_KEY'),
+    'API_SECRET': os.getenv('CLOUDINARY_API_SECRET'),
+}
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'

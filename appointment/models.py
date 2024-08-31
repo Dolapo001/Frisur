@@ -1,5 +1,7 @@
 import os.path
 import uuid
+
+from cloudinary.models import CloudinaryField
 from django.core.exceptions import ValidationError
 from django.db import models, IntegrityError
 from datetime import datetime, timedelta
@@ -46,7 +48,7 @@ class Appointment(models.Model):
     special_request = models.TextField(null=True, blank=True)
     end_time = models.TimeField(null=True)
     datetime = models.DateTimeField(null=True, blank=True)
-    #style_sample = CloudinaryField('image', null=True, blank=True)
+    style_sample = CloudinaryField('image', null=True, blank=True)
 
     class Meta:
         unique_together = ('date', 'time', 'stylist')
@@ -110,7 +112,7 @@ class Appointment(models.Model):
             allowed_extensions = ['.jpg', '.jpeg', '.png']
             extension = os.path.splitext(self.style_sample.name)[1].lower()
             if extension not in allowed_extensions:
-                raise ValidationError(f"Unsupported file extension. Allowed extensions are: {", ".join(allowed_extensions)}")
+                raise ValidationError(f"Unsupported file extension. Allowed extensions are: {', '.join(allowed_extensions)}")
 
     def save(self, *args, **kwargs):
         if not self.ticket_number:
