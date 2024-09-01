@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, datetime
 from django.contrib.auth import authenticate, login, logout
 from drf_spectacular.types import OpenApiTypes
 from rest_framework import status
@@ -187,4 +187,57 @@ class StylistAppointmentListView(APIView):
 
         serializer = AppointmentListSerializer(appointments, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class AppointmentListByDayView(APIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = AppointmentListSerializer
+
+    @extend_schema(
+        description="Retrieve list of appointments for a specific day.",
+        parameters=[
+            OpenApiParameter("date", type=str, location=OpenApiParameter.QUERY,
+                             description="Filter appointments by date (YYYY-MM-DD)."),
+            OpenApiParameter("stylist", type=str, location=OpenApiParameter.QUERY,
+                             description="Filter appointments by stylist name."),
+        ],
+        responses={
+            200: OpenApiResponse(
+                description="List of appointments",
+                response=AppointmentListSerializer(many=True)
+            ),
+            400: OpenApiResponse(description="Bad Request"),
+            500: OpenApiResponse(description="Internal Server Error")
+        }
+    )
+    def get(self, request, format=None):
+        date_param = request.query_params.get('date', None)
+        stylist = request.query_params.get('stylist', None)
+
+        try:
+            if date_param:
+                try:
+                    # Convert the string date_param to a datetime.date object
+                    appointment_date = datetime.strptime(date_param, '%Y-%m-%d').date()
+                except ValueError:
+                    return Response({'error': 'Invalid date format. Use YYYY-MM-DD.'}, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                appointment_date = datetime.today().date()
+
+            # Filter appointments by date and optionally by stylist
+            appointments = Appointment.objects.filter(
+                date=appointment_date,
+                status__in=['scheduled', 'rescheduled']  # Exclude cancelled appointments
+            )
+
+            if stylist:
+                appointments = appointments.filter(stylist=stylist)
+
+            appointments = appointments.order_by('time')
+
+            serializer = self.serializer_class(appointments, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            return Response({'error': 'Internal server error.', 'details': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
