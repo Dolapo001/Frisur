@@ -22,17 +22,6 @@ class ScheduleAppointmentSerializer(serializers.ModelSerializer):
 
         return data
 
-    def create(self, validated_data):
-        style_sample = validated_data.pop('style_sample', None)
-        appointment = Appointment.objects.create(**validated_data)
-
-        if style_sample:
-            upload_result = cloudinary.uploader.upload(style_sample)
-            appointment.style_sample = upload_result.get('url')
-            appointment.save()
-
-        return appointment
-
 
 class RescheduleAppointmentSerializer(serializers.ModelSerializer):
     class Meta:

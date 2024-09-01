@@ -26,6 +26,7 @@ STATUS_CHOICES = (
     ('rescheduled', 'Rescheduled')
 )
 
+
 class Appointment(models.Model):
     id = models.AutoField(primary_key=True)
     ticket_number = models.CharField(max_length=4, unique=True, editable=False)
@@ -42,7 +43,7 @@ class Appointment(models.Model):
     special_request = models.TextField(null=True, blank=True)
     end_time = models.TimeField(null=True, blank=True)
     datetime = models.DateTimeField(null=True, blank=True)
-    style_sample = CloudinaryField('image', null=True, blank=True)
+    style_sample = models.ImageField(upload_to='images/', blank=True)
 
     class Meta:
         db_table = 'appointment_appointment'
