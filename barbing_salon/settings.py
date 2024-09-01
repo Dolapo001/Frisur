@@ -264,9 +264,9 @@ CACHES = {
     }
 }
 
-#SITE_DOMAIN = 'https://frisursalon.vercel.app/'
+SITE_DOMAIN = 'https://frisursalon.vercel.app/'
 
-SITE_DOMAIN = 'http://localhost:5173'
+#SITE_DOMAIN = 'http://localhost:5173'
 
 
 #CORS_ALLOW_ALL_ORIGINS = True
