@@ -7,8 +7,9 @@ WORKDIR /usr/src/app
 # Copy application code
 COPY . .
 
-# Install dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+# Install dependencies and supervisord
+RUN apk add --no-cache supervisor \
+    && pip install --no-cache-dir -r requirements.txt
 
 # Create a group and user
 RUN addgroup -S mygroup && adduser -S myuser -G mygroup
@@ -19,8 +20,11 @@ RUN chown -R myuser:mygroup /usr/src/app
 # Switch to non-root user
 USER myuser
 
-# Make the script executable
-RUN chmod +x start.sh
+# Copy the supervisord configuration
+COPY supervisord.conf /etc/supervisord.conf
 
-# Set the command to run Gunicorn directly
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--timeout", "0", "barbing_salon.wsgi:application"]
+# Expose the port
+EXPOSE 8000
+
+# Set the command to run supervisord
+CMD ["supervisord", "-c", "/etc/supervisord.conf"]
