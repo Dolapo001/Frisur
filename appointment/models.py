@@ -113,17 +113,6 @@ class Appointment(models.Model):
                     f"The stylist {self.stylist} is not available for the selected time and service."
                 )
 
-    def clean(self):
-        if self.style_sample:
-            allowed_extensions = ['.jpg', '.jpeg', '.png']
-            extension = os.path.splitext(self.style_sample.name)[1].lower()
-
-            print(f"Uploaded file extension: {extension}")
-
-            if extension not in allowed_extensions:
-                raise ValidationError(
-                    f"Unsupported file extension. Allowed extensions are: {', '.join(allowed_extensions)}")
-
     def save(self, *args, **kwargs):
         if not self.ticket_number:
             self.ticket_number = self.generate_ticket_number()
@@ -133,5 +122,4 @@ class Appointment(models.Model):
         self.datetime = timezone.make_aware(datetime.combine(self.date, self.time), timezone.get_current_timezone())
         self.check_overlapping_appointments()
         self.block_stylist_availability_for_home_service()
-        self.clean()
         super().save(*args, **kwargs)
