@@ -16,7 +16,7 @@ from rest_framework.parsers import MultiPartParser, FormParser
 
 class ScheduleAppointmentView(APIView):
     serializer_class = ScheduleAppointmentSerializer
-    parser_classes = [MultiPartParser, FormParser]
+    parser_classes = (MultiPartParser, FormParser)
 
     @extend_schema(
         request=ScheduleAppointmentSerializer,
@@ -56,7 +56,7 @@ class ScheduleAppointmentView(APIView):
 
 class RescheduleAppointmentView(APIView):
     serializer_class = RescheduleAppointmentSerializer
-    parser_classes = [MultiPartParser, FormParser]
+    parser_classes = (MultiPartParser, FormParser)
 
     @extend_schema(
         request=RescheduleAppointmentSerializer,
