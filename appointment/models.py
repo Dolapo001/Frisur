@@ -6,6 +6,7 @@ import os
 import random
 from datetime import datetime, timedelta
 
+
 STYLIST_CHOICES = (
     ('Pastor', 'Pastor'),
     ('Orebiyi', 'Orebiyi'),
