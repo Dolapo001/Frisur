@@ -19,7 +19,7 @@ class ScheduleAppointmentView(APIView):
     @extend_schema(
         request=ScheduleAppointmentSerializer,
         responses={
-            201: OpenApiResponse(response=ConfirmAppointmentSerializer),
+            200: OpenApiResponse(response=ConfirmAppointmentSerializer),
             500: OpenApiResponse(description="Internal Server Error"),
             400: OpenApiResponse(description="An appointment with the specified date, time, and stylist already exists.")
         },
@@ -39,7 +39,7 @@ class ScheduleAppointmentView(APIView):
                     send_confirmation_email(appointment)
 
                     confirm_serializer = ConfirmAppointmentSerializer(appointment)
-                    return Response(confirm_serializer.data, status=status.HTTP_201_CREATED)
+                    return Response(confirm_serializer.data, status=status.HTTP_200_OK)
                 except IntegrityError:
                     return Response({
                         "error_message": "An appointment with the specified date, time, and stylist already exists."
