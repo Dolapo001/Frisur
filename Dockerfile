@@ -14,11 +14,10 @@ RUN apk add --no-cache supervisor \
 # Create a group and user
 RUN addgroup -S mygroup && adduser -S myuser -G mygroup
 
-# Change ownership of the application files to the non-root user
-RUN chown -R myuser:mygroup /usr/src/app
-
 # Create the log directory for Supervisor
-RUN mkdir -p /var/log/supervisor
+RUN mkdir -p /var/log/supervisor \
+    && chown -R myuser:mygroup /var/log/supervisor \
+    && chown -R myuser:mygroup /usr/src/app
 
 # Switch to non-root user
 USER myuser
