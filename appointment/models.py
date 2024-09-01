@@ -43,7 +43,7 @@ class Appointment(models.Model):
     special_request = models.TextField(null=True, blank=True)
     end_time = models.TimeField(null=True, blank=True)
     datetime = models.DateTimeField(null=True, blank=True)
-    style_sample = models.ImageField(upload_to='images/', blank=True)
+    style_sample = models.ImageField(upload_to='images/', blank=True, null=True)
 
     class Meta:
         db_table = 'appointment_appointment'
