@@ -40,5 +40,5 @@ Frisur Barbing Salon is a digital barbing salon platform that enables users to b
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/your-username/infinity-barbing-salon.git
+git clone https://github.com/your-username/Frisur.git
 cd infinity-barbing-salon
