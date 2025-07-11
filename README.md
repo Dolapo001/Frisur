@@ -101,7 +101,7 @@ For major changes, open an issue first to discuss what you'd like to propose.
 
 ## 📄 License
 
-This project is licensed under the [[MIT License](https://github.com/Dolapo001/Frisur/blob/main/LICENSE).
+This project is licensed under the [MIT License](https://github.com/Dolapo001/Frisur/blob/main/LICENSE).
 
 ---
 
@@ -110,7 +110,7 @@ This project is licensed under the [[MIT License](https://github.com/Dolapo001/F
 For inquiries or feature requests:
 
 * GitHub Issues
-* Email: [adedolapo.atiba@gmail.com](mailto:yadedolapo.atiba@gmail.com) 
+* Email: [adedolapo.atiba@gmail.com](mailto:adedolapo.atiba@gmail.com) 
 
 ---
 
