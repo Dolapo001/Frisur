@@ -46,7 +46,7 @@ cd Frisur
 ### 2. Set Up Virtual Environment (Backend)
 
 ```bash
-cd backend
+cd barbing_salon
 python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 ```
@@ -101,7 +101,7 @@ For major changes, open an issue first to discuss what you'd like to propose.
 
 ## 📄 License
 
-This project is licensed under the [[MIT License](https://github.com/Dolapo001/Frisur/blob/main/LICENSE)].
+This project is licensed under the [[MIT License](https://github.com/Dolapo001/Frisur/blob/main/LICENSE).
 
 ---
 
